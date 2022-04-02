@@ -32,14 +32,12 @@ const BillModel = mongoose.Schema(
       type: Number,
       default: 0,
     },
-    cancel: {
-      isCancelled: {
-        type: Boolean,
-        default: false,
-      },
-      reason: {
-        type: String,
-      },
+    isCancelled: {
+      type: Boolean,
+      default: false,
+    },
+    cancelledReason: {
+      type: String,
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,

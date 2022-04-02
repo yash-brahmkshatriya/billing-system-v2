@@ -14,7 +14,12 @@ module.exports = {
     login_success: "Login Successful!",
     access_denied: "Access Denied",
   },
-  bills: {},
+  bills: {
+    bills_not_found: "Bills not Found",
+    bill_created: "Bill created",
+    bill_updated: "Bill details updated",
+    bill_cancelled: "Bill Cancelled",
+  },
   common: {
     unauthorized_login: "Not logged in!",
     unauthorized_module: "You do not have access to this module",
