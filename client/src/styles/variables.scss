@@ -1,0 +1,16 @@
+$base-primary: #0d21a1;
+$base-primary-dark: #011638;
+$base-dark: #141414;
+$base-secondary: #eec643;
+$base-background: #eef0f2;
+
+$base-label: #011542;
+$base-grey: #eef0f4;
+
+$base-border: #7b88a5;
+$base-hint: #a6afc5;
+
+$primary: $base-primary;
+$secondary: $base-secondary;
+
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
