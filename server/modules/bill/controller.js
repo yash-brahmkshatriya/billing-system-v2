@@ -12,44 +12,37 @@ class BillController {
         return responses.sendBadRequest(res, data.url);
       }
       data.body.owner = data.user._id;
-      let oldLatestBill = this.getLatestBill(data.user);
+
       const NOW = new Date();
-      if (oldLatestBill) {
-        data.body.bill = {
-          number: oldLatestBill.bill.number + 1,
-          date: NOW,
-        };
-        data.body.dc = {
-          number: oldLatestBill.dc.number + 1,
-          date: NOW,
-        };
-      } else {
-        data.body.bill = {
-          number: 1,
-          date: NOW,
-        };
-        data.body.dc = {
-          number: 1,
-          date: NOW,
-        };
-      }
+      const dateOfBill = data.body?.bill?.date || NOW;
+      const dateOfDC = data.body?.dc?.date || NOW;
+
+      let nextBillNumber = await this.getNextBillNumbers(
+        data.user,
+        dateOfBill.toISOString()
+      );
+      data.body.bill = {
+        number: nextBillNumber.billNumber,
+        date: dateOfBill,
+      };
+      data.body.dc = {
+        number: nextBillNumber.dcNumber,
+        date: dateOfDC,
+      };
       let bill = await Bills.create(data.body);
 
       return responses.sendSuccess(res, bill, messages.bills.bill_created);
     } catch (e) {
+      console.error(e);
       return responses.sendServerError(res, data.url);
     }
   }
 
   async getLatestBillDetails(data, res) {
     try {
-      let bill = await this.getLatestBill(data.user);
-      if (bill) return responses.sendSuccess(res, bill);
-      return responses.sendNotFound(
-        res,
-        data.url,
-        messages.bills.bills_not_found
-      );
+      let billDate = data.query.date ?? new Date().toISOString();
+      let bill = await this.getNextBillNumbers(data.user, billDate);
+      return responses.sendSuccess(res, bill);
     } catch (e) {
       return responses.sendServerError(res, data.url);
     }
@@ -76,6 +69,23 @@ class BillController {
 
         return responses.sendSuccess(res, records, messages.constant.retrive);
       }
+      const financialDates = this.getCurrentFinancialYearDates();
+      let startDate;
+      let endDate;
+
+      if (data.query.startDate && data.query.endDate) {
+        startDate = data.query.startDate;
+        endDate = data.query.endDate;
+      } else {
+        startDate = financialDates.start;
+        endDate = financialDates.end;
+      }
+
+      data.query["bill.date"] = {
+        $gte: startDate,
+        $lte: endDate,
+      };
+
       records = await Bills.find(data.query)
         .sort(sortBy)
         .skip(skip)
@@ -94,6 +104,7 @@ class BillController {
         meta
       );
     } catch (e) {
+      console.error(e);
       return responses.sendServerError(res, data.url);
     }
   }
@@ -118,13 +129,10 @@ class BillController {
       if (!common.checkKeys(body, requiredFields)) {
         return responses.sendBadRequest(res, data.url);
       }
-      let bill = await Bills.findByIdAndUpdate(
-        data.params.billId,
-        {
-          $set: body,
-        },
-        { new: true }
-      );
+      let bill = await Bills.findById(data.params.billId);
+      bill.partyDetails = data.body.partyDetails;
+      bill.items = data.body.items;
+      bill = await bill.save();
       if (bill) {
         return responses.sendSuccess(res, bill, messages.bills.bill_updated);
       } else
@@ -161,14 +169,47 @@ class BillController {
     }
   }
 
-  async getLatestBill(user) {
+  getCurrentFinancialYearDates(dateString = null) {
+    let date = dateString ? new Date(dateString) : new Date();
+
+    let financialBeginYear =
+      date.getMonth() < 3 ? date.getFullYear() - 1 : date.getFullYear();
+    let financialYearStartDate = new Date(
+      `04/01/${financialBeginYear} 00:00:00`
+    );
+    let financialYearEndDate = new Date(
+      `03/31/${financialBeginYear + 1} 23:59:59`
+    );
+
+    return { start: financialYearStartDate, end: financialYearEndDate };
+  }
+
+  async getNextBillNumbers(user, billDate) {
     try {
-      let bill = await Bills.find({ owner: user._id })
+      // bill Date in form of iso string or mm-dd-yyyy
+      if (!billDate) throw new Error("Bill Date is required");
+
+      const financialDates = this.getCurrentFinancialYearDates(billDate);
+      let bill = await Bills.findOne({
+        owner: user._id,
+        "bill.date": {
+          $gte: financialDates.start,
+          $lte: financialDates.end,
+        },
+      })
         .sort({ "bill.number": -1 })
         .limit(1)
-        .select("bill dc");
-      if (bill) return bill;
-      else return null;
+        .select("bill.number dc.number");
+      if (bill)
+        return {
+          billNumber: bill.bill.number + 1,
+          dcNumber: bill.dc.number + 1,
+        };
+      else
+        return {
+          billNumber: 1,
+          dcNumber: 1,
+        };
     } catch (e) {
       throw e;
     }

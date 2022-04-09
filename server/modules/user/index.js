@@ -45,3 +45,5 @@ userRouter.put("/changePassword", authenticate, (req, res) => {
   };
   UserController.changePassword(data, res);
 });
+
+module.exports = userRouter;

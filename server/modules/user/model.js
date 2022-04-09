@@ -4,20 +4,26 @@ const UserModel = mongoose.Schema(
   {
     firstName: {
       type: String,
+      trim: true,
+      required: true,
     },
     lastName: {
       type: String,
+      trim: true,
     },
     userName: {
       type: String,
       unique: true,
       sparse: true,
+      required: "Username is required",
     },
     email: {
       type: String,
-      match:
-        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       unique: true,
+      lowercase: true,
+      trim: true,
+      required: "Email address is required",
     },
     password: {
       type: String,

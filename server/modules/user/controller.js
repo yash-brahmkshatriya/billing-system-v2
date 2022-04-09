@@ -11,14 +11,13 @@ class UserController {
       if (!common.checkKeys(data.body, requiredFields)) {
         return responses.sendBadRequest(res, data.url);
       }
-      let user = User.findOne({ username: data.body.username });
+      let user = await User.findOne({ userName: data.body.userName });
       if (user) {
         return responses.sendForbidden(res, data.url, messages.user.user_exist);
       }
       data.body.password = await encryption.hashPasswordUsingBcrypt(
         data.body.password
       );
-
       user = await User.create(data.body);
       return responses.sendSuccess(res, null, messages.user.user_created);
     } catch (err) {
@@ -32,10 +31,16 @@ class UserController {
         return responses.sendBadRequest(res, data.url);
       }
       const { userName, password } = data.body;
-      let user = await Model.findOne({ userName });
+      let user = await User.findOne({
+        $or: [{ userName }, { email: userName }],
+      });
 
       if (!user) {
-        return response.sendError(res, messages.user.user_not_found);
+        return responses.sendNotFound(
+          res,
+          data.url,
+          messages.user.user_not_found
+        );
       }
       let validPassword = await encryption.comparePasswordUsingBcrypt(
         password,
@@ -67,7 +72,8 @@ class UserController {
   }
   async profile(data, res) {
     try {
-      let user = User.findById(data.user._id);
+      let user = await User.findById(data.user._id).select({ password: 0 });
+
       if (user)
         return responses.sendSuccess(res, user, messages.constant.retrive);
       return responses.sendNotFound(

@@ -12,7 +12,7 @@ const hashPasswordUsingBcrypt = (plainTextPassword) => {
   const { saltRounds } = config;
 
   try {
-    return bcrypt.hashSync(plainTextPassword, saltRounds);
+    return bcrypt.hash(plainTextPassword, saltRounds);
   } catch (error) {
     throw error;
   }

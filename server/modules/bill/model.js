@@ -43,6 +43,9 @@ const BillModel = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
     },
+    grandTotal: {
+      type: Number,
+    },
   },
   {
     timestamps: true,
@@ -51,9 +54,15 @@ const BillModel = mongoose.Schema(
     },
   }
 );
-
-BillModel.virtual("grandTotal").get(function () {
-  return this.items.reduce((sumTillNow, item) => sumTillNow + item.amount, 0);
+BillModel.pre("save", function (next) {
+  this.items.forEach(
+    (item) => (item.amount = (item.rate * item.quantity) / item.qtyPerUnit)
+  );
+  this.grandTotal = this.items.reduce(
+    (sumTillNow, item) => sumTillNow + item.amount,
+    0
+  );
+  next();
 });
 
 module.exports = mongoose.model("bills", BillModel);

@@ -4,7 +4,11 @@ const messages = require("../utils/messages")["common"];
 const response = require("../utils/responses");
 
 const authenticate = async (req, res, next) => {
-  let token = req.cookies.Authorization || req.headers.Authorization;
+  let token =
+    req.cookies.Authorization ||
+    req.headers.Authorization ||
+    req.headers.authorization;
+
   if (token) {
     try {
       const userExist = await auth.findByToken(token);
@@ -16,7 +20,7 @@ const authenticate = async (req, res, next) => {
         }
       }
     } catch (err) {
-      response.sendServerError(res, err);
+      return response.sendServerError(res, err);
     }
   }
   return response.sendUnauthorized(res, messages.unauthorized_login);
