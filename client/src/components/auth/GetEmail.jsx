@@ -30,6 +30,7 @@ const GetEmail = () => {
       setShowError.on();
       return;
     }
+    dispatch(authActions.setAuthEmail(email));
     try {
       setBtnDisabled.on();
       let emailExists = await dispatch(authActions.checkEmail(data));

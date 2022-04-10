@@ -15,6 +15,9 @@ class StandardInput extends Component {
       showPassword: false,
     };
   }
+  componentDidMount() {
+    this.checkValidity(this.props.value);
+  }
 
   getStandardInputClasses() {
     const { disabled, className } = this.props;
@@ -26,9 +29,9 @@ class StandardInput extends Component {
   }
 
   getInputClassName = () => {
-    const { error, inputClasses } = this.props;
+    const { inputClasses } = this.props;
     return classNames('form-control', {
-      error: error,
+      error: (this.state.dirty && !this.state.valid) || this.props.showError,
       [inputClasses]: inputClasses,
       'has-feedback': this.props.type === 'password',
       'after-icon': this.props.afterIcon,
@@ -137,6 +140,7 @@ class StandardInput extends Component {
           formNoValidate={false}
           onPaste={this.props.onPaste}
           ref={innerRef ?? null}
+          onBlur={this.onBlur}
         />
         {this.props.icon ? (
           <label className='icon-text' htmlFor={inputId}>
@@ -152,7 +156,7 @@ class StandardInput extends Component {
 
         {this.props.type === 'password' ? (
           <div className='icon' onClick={this.toggleShowPassword}>
-            <span className='material-icons'>{this.getIcon()}</span>
+            <span className='material-icons'>{this.getPasswordIcon()}</span>
           </div>
         ) : null}
 
@@ -189,6 +193,7 @@ StandardInput.defaultProps = {
   placeholder: '',
   value: '',
   overloadValidity: false,
+  inputProps: {},
 };
 
 export default StandardInput;
