@@ -1,13 +1,13 @@
-const User = require("./model");
-const encryption = require("../../utils/encryption");
-const responses = require("../../utils/responses");
-const messages = require("../../utils/messages");
-const common = require("../../utils/common");
+const User = require('./model');
+const encryption = require('../../utils/encryption');
+const responses = require('../../utils/responses');
+const messages = require('../../utils/messages');
+const common = require('../../utils/common');
 
 class UserController {
   async create(data, res) {
     try {
-      const requiredFields = ["firstName", "userName", "password"];
+      const requiredFields = ['firstName', 'userName', 'password'];
       if (!common.checkKeys(data.body, requiredFields)) {
         return responses.sendBadRequest(res, data.url);
       }
@@ -26,7 +26,7 @@ class UserController {
   }
   async login(data, res) {
     try {
-      const requiredFields = ["userName", "password"];
+      const requiredFields = ['userName', 'password'];
       if (!common.checkKeys(data.body, requiredFields)) {
         return responses.sendBadRequest(res, data.url);
       }
@@ -53,7 +53,7 @@ class UserController {
         };
 
         const token = await encryption.generateAuthToken(criteriaForJWT);
-        res.cookie("Authorization", token, {});
+        res.cookie('Authorization', token, {});
         return responses.sendSuccess(
           res,
           { token },
@@ -95,7 +95,7 @@ class UserController {
         data.params.userId,
         { $set: body },
         { new: true }
-      ).select("-password");
+      ).select('-password');
 
       return responses.sendSuccess(res, user, messages.user.user_updated);
     } catch (e) {
@@ -128,19 +128,19 @@ class UserController {
       return responses.sendServerError(res, data.url);
     }
   }
-  async checkUserName(data, res) {
+  async checkEmail(data, res) {
     try {
-      let user = await User.findOne({ userName: data.body.userName });
+      let user = await User.findOne({ email: data.query.email });
 
       if (user) {
-        return responses.sendForbidden(
-          res,
-          data.url,
-          messages.user.username_exists
-        );
+        return responses.sendSuccess(res, messages.user.email_exists);
       }
 
-      return responses.sendSuccess(res, messages.user.username_available);
+      return responses.sendNotFound(
+        res,
+        data.url,
+        messages.user.user_not_found
+      );
     } catch (err) {
       returnresponse.sendSystemError(res, err);
     }

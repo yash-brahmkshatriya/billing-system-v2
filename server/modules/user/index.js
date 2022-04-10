@@ -1,10 +1,10 @@
-const { Router } = require("express");
-const UserController = require("./controller");
-const authenticate = require("../../middlewares/authenticate");
+const { Router } = require('express');
+const UserController = require('./controller');
+const authenticate = require('../../middlewares/authenticate');
 
 const userRouter = Router();
 
-userRouter.post("/signup", (req, res) => {
+userRouter.post('/signup', (req, res) => {
   let data = {
     body: req.body,
     url: req.originalUrl,
@@ -12,7 +12,7 @@ userRouter.post("/signup", (req, res) => {
   UserController.create(data, res);
 });
 
-userRouter.post("/login", (req, res) => {
+userRouter.post('/login', (req, res) => {
   let data = {
     body: req.body,
     url: req.originalUrl,
@@ -20,7 +20,7 @@ userRouter.post("/login", (req, res) => {
   UserController.login(data, res);
 });
 
-userRouter.get("/me", authenticate, (req, res) => {
+userRouter.get('/me', authenticate, (req, res) => {
   let data = {
     url: req.originalUrl,
     user: req.user,
@@ -28,7 +28,7 @@ userRouter.get("/me", authenticate, (req, res) => {
   UserController.profile(data, res);
 });
 
-userRouter.put("/profile", authenticate, (req, res) => {
+userRouter.put('/profile', authenticate, (req, res) => {
   let data = {
     url: req.originalUrl,
     user: req.user,
@@ -37,13 +37,21 @@ userRouter.put("/profile", authenticate, (req, res) => {
   UserController.edit(data, res);
 });
 
-userRouter.put("/changePassword", authenticate, (req, res) => {
+userRouter.put('/changePassword', authenticate, (req, res) => {
   let data = {
     url: req.originalUrl,
     user: req.user,
     body: req.body,
   };
   UserController.changePassword(data, res);
+});
+
+userRouter.get('/check-email', (req, res) => {
+  let data = {
+    url: req.originalUrl,
+    query: req.query,
+  };
+  UserController.checkEmail(data, res);
 });
 
 module.exports = userRouter;

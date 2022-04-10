@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import validationUtils from '@/utils/validationUtils';
+import './standard-input.scss';
 
 class StandardInput extends Component {
   constructor(props) {
@@ -79,6 +80,16 @@ class StandardInput extends Component {
       valid: isValid,
       errorText: errorText,
     });
+  };
+
+  checkCustomValidity = (e) => {
+    if (this.props.checkValidity) {
+      const { isValid, errorText } = this.props.checkValidity(e.target.value);
+      this.setState({
+        valid: isValid,
+        errorText: errorText,
+      });
+    }
   };
 
   toggleShowPassword = () => {
