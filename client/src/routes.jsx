@@ -5,7 +5,7 @@ import NotFound from './pages/NotFound';
 import Dashboard from './pages/Dashboard';
 import Bill from './pages/Bill';
 import Auth from './pages/Auth';
-import RequireAuth from './components/base/RequireAuth';
+import RequireAuth from './base/RequireAuth';
 
 function AppRoutes() {
   return (

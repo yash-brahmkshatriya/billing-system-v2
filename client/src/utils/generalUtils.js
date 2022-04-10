@@ -1,0 +1,34 @@
+export function getErrorMessage(err) {
+  return (
+    err.response?.data?.message ||
+    err.response?.message ||
+    err.message ||
+    JSON.stringify(err)
+  );
+}
+
+export function pickFromObject(object, keys) {
+  const ans = {};
+  for (let key of keys) {
+    ans[key] = object[key] ?? null;
+  }
+  return ans;
+}
+
+export function kNeighborsOfIndex(arr, index, k = 5) {
+  let dl = index,
+    ul = arr.length - index - 1;
+  let lowerIndex, upperIndex;
+  if (dl < ul) {
+    lowerIndex = Math.max(index - 2, 0);
+    upperIndex = Math.min(lowerIndex + k, arr.length);
+  } else {
+    upperIndex = Math.min(index + 3, arr.length);
+    lowerIndex = Math.max(upperIndex - k, 0);
+  }
+  return arr.slice(lowerIndex, upperIndex);
+}
+
+export function copyToClipboard(value) {
+  navigator.clipboard.writeText(value);
+}
