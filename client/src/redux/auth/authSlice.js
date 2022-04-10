@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN } from '@/enums/misc';
+import { ACCESS_TOKEN } from '@/data/enums/misc';
 import { clearCookie } from '@/utils/cookieUtils';
 import { createSlice } from '@reduxjs/toolkit';
 

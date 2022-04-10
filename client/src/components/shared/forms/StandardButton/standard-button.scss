@@ -1,0 +1,66 @@
+@import '@/styles/variables';
+
+$button-hover-alpha: 0.3;
+
+@mixin make-button($color, $name) {
+  &.btn-#{$name} {
+    color: #ffffff;
+    background-color: $color;
+    border-color: $color;
+    transition: all 250ms ease;
+  }
+  &.btn-outline-#{$name} {
+    color: $color;
+    background-color: transparent;
+    border-color: $color;
+    transition: all 250ms ease;
+  }
+  &:not(:disabled):not(.disabled),
+  :not(:disabled):not(.disabled) {
+    &.btn-#{$name} {
+      &:hover,
+      &:active {
+        filter: brightness(85%);
+      }
+      &:focus {
+        box-shadow: 0 0 0 0.15rem rgba($color, $button-hover-alpha);
+      }
+    }
+
+    &.btn-outline-#{$name} {
+      &:hover,
+      &:active {
+        color: $color;
+        border-color: $color;
+        background-color: rgba($color, $button-hover-alpha);
+      }
+      &:focus {
+        box-shadow: 0 0 0 0.15rem rgba($color, $button-hover-alpha);
+      }
+    }
+  }
+}
+
+.standard-button {
+  &.btn-block {
+    width: 100% !important;
+  }
+  &.border-less {
+    border: none;
+  }
+  &.btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+    line-height: 1;
+    font-weight: 600;
+
+    &.btn-sm {
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+    }
+  }
+  @include make-button($primary, 'primary');
+  @include make-button($secondary, 'secondary');
+  @include make-button($base-danger, 'danger');
+  @include make-button($base-success, 'success');
+}

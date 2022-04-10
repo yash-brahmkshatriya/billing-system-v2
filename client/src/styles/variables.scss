@@ -1,4 +1,6 @@
 $base-primary: #0d21a1;
+$base-success: #0ca75f;
+$base-danger: #f23e3e;
 $base-primary-dark: #011638;
 $base-dark: #141414;
 $base-secondary: #eec643;
@@ -12,5 +14,3 @@ $base-hint: #a6afc5;
 
 $primary: $base-primary;
 $secondary: $base-secondary;
-
-@import "../../node_modules/bootstrap/scss/bootstrap.scss";

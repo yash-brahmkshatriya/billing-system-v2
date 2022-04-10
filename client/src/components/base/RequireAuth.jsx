@@ -1,7 +1,7 @@
 import { getCookie } from '@/utils/cookieUtils';
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { ACCESS_TOKEN } from '@/enums/misc';
+import { ACCESS_TOKEN } from '@/data/enums/misc';
 
 function RequireAuth({ children, redirectTo }) {
   const isAuthenticated = getCookie(ACCESS_TOKEN) ? true : false;

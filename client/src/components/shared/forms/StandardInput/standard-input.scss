@@ -1,0 +1,91 @@
+@import '@/styles/variables';
+
+.standard-input {
+  text-align: left;
+
+  input {
+    border-radius: 0px;
+    padding-left: 0px !important;
+    border: 0px;
+    border-bottom: solid 1px $base-border;
+    height: 3rem;
+    font-size: 1rem;
+    padding: 0.5rem;
+
+    &:focus {
+      border-bottom: solid 1px $base-border;
+      box-shadow: none;
+    }
+    &:disabled {
+      color: $base-hint;
+      background: inherit;
+    }
+
+    &.error {
+      border-bottom: solid 1px $base-danger;
+      color: $base-danger;
+    }
+
+    //Hide up and down incrementors for input box
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    &[type='number'] {
+      -moz-appearance: textfield;
+    }
+  }
+  ::placeholder {
+    color: $base-hint;
+  }
+
+  label {
+    font-size: 1rem;
+    color: $base-label;
+    font-weight: 400;
+  }
+
+  .help-text {
+    font-size: 0.75rem;
+    opacity: 0.5;
+  }
+  .error-text {
+    font-size: 0.75rem;
+    color: danger;
+  }
+  .error {
+    input {
+      border-bottom: solid 1px $base-danger;
+      color: $base-danger;
+    }
+  }
+
+  .icon-text {
+    position: absolute;
+    bottom: 12%;
+    margin-left: 16px;
+    color: $base-hint !important;
+    &.after {
+      left: calc(100% - 40px);
+    }
+  }
+}
+
+.form-control {
+  &.has-feedback {
+    padding-right: 30px;
+    + .icon {
+      position: absolute;
+      right: 0;
+      padding-right: 8px;
+      margin-top: -32px;
+      color: #919191;
+      cursor: pointer;
+    }
+  }
+  &.after-icon {
+    padding-right: 25px;
+  }
+}

@@ -1,0 +1,10 @@
+@import '@/styles/variables';
+
+.auth-side-info {
+  background-color: $primary;
+  color: $base-background;
+  height: 100% !important;
+  img {
+    max-height: 350px;
+  }
+}
