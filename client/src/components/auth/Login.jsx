@@ -8,7 +8,7 @@ import { LoginValidation } from '@/validations/LoginValidation';
 import StandardInput from '@/components/shared/forms/StandardInput/StandardInput';
 import StandardButton from '@/components/shared/forms/StandardButton/StandardButton';
 
-import * as autActions from '@/redux/auth/authActions';
+import * as authActions from '@/redux/auth/authActions';
 
 import validationFunctions from '@/utils/validationUtils';
 import { DASHBOARD } from '@/data/routeUrls';
@@ -42,7 +42,7 @@ function Login() {
     }
     try {
       setBtnDisabled.on();
-      let loggedIn = await dispatch(autActions.login(data));
+      let loggedIn = await dispatch(authActions.login(data));
       if (loggedIn) navigate(DASHBOARD);
     } catch (e) {
       console.error(e);
@@ -89,7 +89,7 @@ function Login() {
           text='Log In'
           type='submit'
           disabled={btnDisabled}
-        ></StandardButton>
+        />
       </form>
     </div>
   );

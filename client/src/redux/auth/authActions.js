@@ -50,7 +50,7 @@ export const signup = (data) => (dispatch) => {
     .post(url, data)
     .then((res) => {
       const token = res.data.data.token;
-      setCookie(ACCESS_TOKEN, `Bearer ${token}`);
+      setCookie(ACCESS_TOKEN, token);
       return true;
     })
     .catch((err) => {
