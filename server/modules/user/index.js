@@ -28,11 +28,12 @@ userRouter.get('/me', authenticate, (req, res) => {
   UserController.profile(data, res);
 });
 
-userRouter.put('/profile', authenticate, (req, res) => {
+userRouter.put('/profile/:userId', authenticate, (req, res) => {
   let data = {
     url: req.originalUrl,
     user: req.user,
     body: req.body,
+    params: req.params,
   };
   UserController.edit(data, res);
 });

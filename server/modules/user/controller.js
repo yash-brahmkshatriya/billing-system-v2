@@ -26,7 +26,11 @@ class UserController {
 
       const token = await encryption.generateAuthToken(criteriaForJWT);
       res.cookie('Authorization', token, {});
-      return responses.sendSuccess(res, { token }, messages.user.user_created);
+      return responses.sendSuccess(
+        res,
+        { token, user },
+        messages.user.user_created
+      );
     } catch (err) {
       return responses.sendServerError(res, data.url, err);
     }
@@ -95,10 +99,14 @@ class UserController {
       let body = data.body;
       delete body.password;
       delete body.userName;
+      delete body.email;
 
-      let user = await User.findByIdAndUpdate(
+      let user = await User.findById(data.params.userId).lean();
+      Object.keys(body).forEach((key) => (user[key] = body[key]));
+
+      user = await User.findByIdAndUpdate(
         data.params.userId,
-        { $set: body },
+        { $set: user },
         { new: true }
       ).select('-password');
 

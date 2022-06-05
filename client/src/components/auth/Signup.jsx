@@ -11,7 +11,7 @@ import StandardButton from '@/components/shared/forms/StandardButton/StandardBut
 import * as authActions from '@/redux/auth/authActions';
 
 import validationFunctions from '@/utils/validationUtils';
-import { DASHBOARD } from '@/data/routeUrls';
+import { COMPANY_DETAILS } from '@/data/routeUrls';
 
 function Signup() {
   const dispatch = useDispatch();
@@ -49,7 +49,7 @@ function Signup() {
       setBtnDisabled.on();
       const signupSuccess = await dispatch(authActions.signup(data));
       if (signupSuccess) {
-        navigate(DASHBOARD);
+        navigate(COMPANY_DETAILS);
       }
     } catch (err) {
       console.error(err);

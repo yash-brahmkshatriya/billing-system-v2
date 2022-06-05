@@ -51,6 +51,7 @@ export const signup = (data) => (dispatch) => {
     .then((res) => {
       const token = res.data.data.token;
       setCookie(ACCESS_TOKEN, token);
+      dispatch(actions.setProfile({ profile: res.data.data.user }));
       return true;
     })
     .catch((err) => {
@@ -65,9 +66,20 @@ export const me = () => (dispatch) => {
   return instance
     .get(url)
     .then((response) => {
-      dispatch(actions.setProfile(response.data.data));
+      dispatch(actions.setProfile({ profile: response.data.data }));
     })
     .catch((err) => {
-      throw err;
+      console.error(err);
+    });
+};
+
+export const updateProfile = (userId, data) => (dispatch) => {
+  let url = AUTH_URLS.UPDATE_PROFILE.replace('{userId}', userId);
+  return instance
+    .put(url, data)
+    .then((response) => dispatch(actions.setProfile(response.data.data)))
+    .catch((err) => {
+      let errMsg = getErrorMessage(err);
+      errorNoti(errMsg);
     });
 };

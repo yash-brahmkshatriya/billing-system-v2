@@ -10,7 +10,7 @@ instance.interceptors.request.use(
   (config) => {
     const accessToken = getCookie(ACCESS_TOKEN);
     if (accessToken) {
-      config.headers['Authorization'] = `Bearer ${accessToken}`;
+      config.headers['Authorization'] = accessToken;
     }
     return config;
   },

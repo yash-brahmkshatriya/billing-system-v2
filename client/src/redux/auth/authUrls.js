@@ -4,7 +4,7 @@ const AUTH_URLS = {
   SIGNUP: '/api/user/signup',
   ME: '/api/user/me',
   CHANGE_PASSWORD: '/api/user/changePassword',
-  UPDATE_PROFILE: '/api/user/profile',
+  UPDATE_PROFILE: '/api/user/profile/{userId}',
 };
 
 export default AUTH_URLS;

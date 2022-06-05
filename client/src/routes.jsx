@@ -1,16 +1,40 @@
-import React from 'react';
-import { AUTH, DASHBOARD, BILLS } from '@/data/routeUrls';
+import React, { useEffect } from 'react';
+import { AUTH, DASHBOARD, BILLS, COMPANY_DETAILS } from '@/data/routeUrls';
 import { Routes, Route } from 'react-router-dom';
 import NotFound from './pages/NotFound';
 import Dashboard from './pages/Dashboard';
 import Bill from './pages/Bill';
 import Auth from './pages/Auth';
-import RequireAuth from './base/RequireAuth';
+import { RequireAuth, OnlyPublicAuth } from './base/RequireAuth';
+import CompanyDetails from './pages/CompanyDetails';
+import { useDispatch } from 'react-redux';
+
+import * as authActions from '@/redux/auth/authActions';
 
 function AppRoutes() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(authActions.me());
+  }, []);
+
   return (
     <Routes>
-      <Route path={`${AUTH}/*`} element={<Auth />} />
+      <Route
+        path={`${AUTH}/*`}
+        element={
+          <OnlyPublicAuth redirectTo={DASHBOARD}>
+            <Auth />
+          </OnlyPublicAuth>
+        }
+      />
+      <Route
+        path={COMPANY_DETAILS}
+        element={
+          <RequireAuth redirectTo={AUTH}>
+            <CompanyDetails />
+          </RequireAuth>
+        }
+      />
       <Route
         path={DASHBOARD}
         element={

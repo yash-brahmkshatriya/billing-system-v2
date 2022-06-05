@@ -15,6 +15,13 @@ export function pickFromObject(object, keys) {
   return ans;
 }
 
+export function removeFromObject(object, keys) {
+  for (let key of keys) {
+    delete object[key];
+  }
+  return object;
+}
+
 export function kNeighborsOfIndex(arr, index, k = 5) {
   let dl = index,
     ul = arr.length - index - 1;
