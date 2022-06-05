@@ -1,0 +1,43 @@
+@import '@/styles/variables.scss';
+
+.pro-sidebar-header {
+  border-bottom: none !important;
+}
+.pro-sidebar-inner {
+  background: #fff !important;
+}
+.pro-icon-wrapper {
+  background-color: transparent !important;
+}
+.pro-sidebar-content {
+  display: flex;
+  flex-direction: column;
+}
+.pro-menu-item {
+  .pro-inner-item {
+    color: $base-hint !important;
+    font-weight: 600 !important;
+    border: 4px solid #fff;
+  }
+  &.active > .pro-inner-item,
+  .pro-inner-item:hover {
+    color: $primary !important;
+    a {
+      color: $primary !important;
+    }
+  }
+  &.active > .pro-inner-item {
+    border-left: 4px solid $primary;
+  }
+
+  &.disabled {
+    .pro-inner-item {
+      cursor: default;
+      color: lightgrey !important;
+    }
+    .pro-inner-item:hover {
+      cursor: default;
+      color: lightgrey !important;
+    }
+  }
+}

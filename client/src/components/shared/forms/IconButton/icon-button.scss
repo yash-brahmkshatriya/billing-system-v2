@@ -1,0 +1,10 @@
+@import '@/styles/variables';
+.icon-button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  &:focus,
+  &:active {
+    border: $primary;
+  }
+}

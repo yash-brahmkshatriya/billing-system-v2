@@ -1,7 +1,8 @@
+import AppLayout from '@/base/Layout/AppLayout';
 import React from 'react';
 
 const Bill = () => {
-  return <div>Bill</div>;
+  return <AppLayout>Bills</AppLayout>;
 };
 
 export default Bill;
