@@ -31,3 +31,37 @@ body,
   text-align: left;
   margin-top: 7px;
 }
+
+// Font Colors
+.alt-white {
+  color: white;
+}
+.alt-primary {
+  color: $primary;
+}
+.alt-secondary {
+  color: $secondary;
+}
+.alt-success {
+  color: $base-success;
+}
+.alt-base-label {
+  color: $base-label;
+}
+
+// BG
+.bg-white {
+  background-color: white;
+}
+.bg-primary {
+  background-color: $primary;
+}
+.bg-secondary {
+  background-color: $secondary;
+}
+.bg-success {
+  background-color: $base-success;
+}
+.bg-base-label {
+  background-color: $base-label;
+}

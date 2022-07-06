@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AUTH, DASHBOARD, BILLS, COMPANY_DETAILS } from '@/data/routeUrls';
 import { Routes, Route } from 'react-router-dom';
 import NotFound from './pages/NotFound';
@@ -10,13 +10,17 @@ import CompanyDetails from './pages/CompanyDetails';
 import { useDispatch } from 'react-redux';
 
 import * as authActions from '@/redux/auth/authActions';
+import Loading from './base/Loading/Loading';
 
 function AppRoutes() {
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(authActions.me());
+  const [loading, setLoading] = useState(true);
+  useEffect(async () => {
+    await dispatch(authActions.me());
+    setLoading(false);
   }, []);
 
+  if (loading) return <Loading />;
   return (
     <Routes>
       <Route

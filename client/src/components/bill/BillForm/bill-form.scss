@@ -1,0 +1,32 @@
+@import '@/styles/variables';
+
+.bill-form {
+  .bill-card {
+    background-color: white;
+    padding: 1rem;
+    border-radius: $base-radius;
+
+    &.primary {
+      background-color: $primary;
+      color: white;
+    }
+  }
+  .bill-field {
+    margin-bottom: 0.5rem;
+    label {
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+    }
+  }
+  .bill-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    .bill-item {
+      background-color: $base-background;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: $base-radius;
+    }
+  }
+}

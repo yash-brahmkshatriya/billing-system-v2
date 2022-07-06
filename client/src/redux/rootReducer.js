@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
 import authSlice from './auth/authSlice';
+import billSlice from './bill/billSlice';
 
 const appReducer = combineReducers({
   auth: authSlice.reducer,
+  bills: billSlice.reducer,
 });
 
 const rootReducer = (state, action) => {

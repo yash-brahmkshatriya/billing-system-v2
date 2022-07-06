@@ -67,23 +67,64 @@ var validationFunctions = {
   },
 
   /**
+   * @param {object} value  field value to be validated
+   * @param {[object]} validations  validation rules for the field
+   *
+   * @returns {object} Returns boolean if field is Valid recursively and errortext
+   */
+  checkFieldValidity: (value, validations) => {
+    let isValid = true,
+      errorText = '';
+    if (typeof value === 'object') {
+      if (Array.isArray(value)) {
+        isValid = value.reduce(
+          (acc, eleVal) =>
+            acc &&
+            validationFunctions.checkFieldValidity(eleVal, validations ?? [])
+              .isValid,
+          true
+        );
+      } else {
+        isValid = Object.keys(value).reduce(
+          (acc, key) =>
+            acc &&
+            validationFunctions.checkFieldValidity(
+              value[key],
+              validations[key] ?? []
+            ).isValid,
+          true
+        );
+      }
+    } else {
+      for (let validation of validations) {
+        if (
+          !validation.disabled &&
+          !validationFunctions[validation.type](value, validation.value)
+        ) {
+          isValid = false;
+          errorText = validation.message;
+        }
+      }
+    }
+
+    return { isValid, errorText };
+  },
+
+  /**
    * @param {object} form  form values to be validated
    * @param {[object]} validations  validation rules for the form
    *
    * @returns {boolean} Return true if form is Valid
    */
   checkFormValidity: (form, validations) => {
+    let isValid = true;
     for (let key in form) {
-      for (let validation of validations[key] || []) {
-        if (
-          !validation.disabled &&
-          !validationFunctions[validation.type](form[key], validation.value)
-        ) {
-          return false;
-        }
-      }
+      isValid &= validationFunctions.checkFieldValidity(
+        form[key],
+        validations[key] ?? []
+      ).isValid;
     }
-    return true;
+    return isValid;
   },
 };
 

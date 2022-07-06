@@ -59,7 +59,7 @@ class StandardInput extends Component {
 
   renderError = () => {
     const { errorText } = this.state;
-
+    console.log(this.props.inputId, this.props.showError);
     if (errorText && (this.state.dirty || this.props.showError)) {
       return <p className='error-text mb-0 mt-2'>{errorText}</p>;
     }
@@ -67,18 +67,21 @@ class StandardInput extends Component {
   };
 
   checkValidity = (value) => {
-    let isValid = true;
-    let errorText = '';
-    for (let validation of this.props.validations || []) {
-      if (
-        !validation.disabled &&
-        !validationUtils[validation.type](value, validation.value)
-      ) {
-        errorText = validation.message;
-        isValid = false;
-        break;
-      }
-    }
+    let { isValid, errorText } = validationUtils.checkFieldValidity(
+      value,
+      this.props.validations ?? []
+    );
+
+    // for (let validation of this.props.validations || []) {
+    //   if (
+    //     !validation.disabled &&
+    //     !validationUtils[validation.type](value, validation.value)
+    //   ) {
+    //     errorText = validation.message;
+    //     isValid = false;
+    //     break;
+    //   }
+    // }
     this.setState({
       valid: isValid,
       errorText: errorText,

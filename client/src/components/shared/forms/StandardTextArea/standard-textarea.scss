@@ -1,30 +1,20 @@
-@import '@/styles/variables';
+@import '@/styles/variables.scss';
 
-.standard-input {
+.standard-textarea {
   text-align: left;
 
-  input {
-    border-radius: $base-radius;
-    border: solid 1px $base-border;
-    height: 3rem;
+  textarea {
+    border-radius: 3px;
+    border: 1px solid $base-border;
     font-size: 1rem;
     padding: 0.5rem;
-
     &:focus {
       box-shadow: 0 0 0 0.15rem rgba($primary, 0.3);
-    }
-    &:disabled {
-      color: $base-hint;
-      background: inherit;
-      cursor: not-allowed;
     }
 
     &.error {
       border: solid 1px $base-danger;
       color: $base-danger;
-      &:focus {
-        box-shadow: 0 0 0 0.15rem rgba($base-danger, 0.3);
-      }
     }
 
     //Hide up and down incrementors for input box
@@ -45,8 +35,7 @@
   label {
     font-size: 1rem;
     color: $base-label;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
+    font-weight: 400;
   }
 
   .help-text {
@@ -57,24 +46,28 @@
     font-size: 0.75rem;
     color: $base-danger;
   }
-  .error {
-    input {
-      border: solid 1px $base-danger;
-      color: $base-danger;
-      &:focus {
-        box-shadow: 0 0 0 0.15rem rgba($base-danger, 0.3);
-      }
-    }
+}
+.error {
+  textarea {
+    border: 1px solid $base-danger;
+    color: $base-danger;
   }
+}
 
-  .icon-text {
-    position: absolute;
-    bottom: 12%;
-    margin-left: 16px;
-    color: $base-hint !important;
-    &.after {
-      left: calc(100% - 40px);
-    }
+.otp {
+  display: inline-block;
+  input {
+    font-size: 20px;
+  }
+}
+
+.icon-text {
+  position: absolute;
+  bottom: 12%;
+  margin-left: 16px;
+  color: $base-hint !important;
+  &.after {
+    left: calc(100% - 40px);
   }
 }
 
@@ -85,7 +78,7 @@
       position: absolute;
       right: 0;
       padding-right: 8px;
-      margin-top: -35px;
+      margin-top: -32px;
       color: #919191;
       cursor: pointer;
     }
