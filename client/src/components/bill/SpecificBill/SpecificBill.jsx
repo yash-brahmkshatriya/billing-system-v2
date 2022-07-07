@@ -2,7 +2,11 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
-import { PencilSquare } from 'react-bootstrap-icons';
+import {
+  PencilSquare,
+  FileArrowDownFill,
+  FileEarmarkArrowDownFill,
+} from 'react-bootstrap-icons';
 import { useBoolean, useToggle } from '@/base/hooks';
 import * as billActions from '@/redux/bill/billActions';
 import Loading from '@/base/Loading/Loading';
@@ -97,8 +101,23 @@ const SpecificBill = () => {
         <div className='d-flex align-items-center'>
           <IconButton
             onClick={setEdit.toggle}
+            Icon={FileArrowDownFill}
+            iconProps={{ className: 'icon-cta' }}
+            buttonProps={{ title: 'Download Bill' }}
+            buttonClassName='me-3'
+          />
+          <IconButton
+            onClick={setEdit.toggle}
+            Icon={FileEarmarkArrowDownFill}
+            iconProps={{ className: 'icon-cta' }}
+            buttonProps={{ title: 'Download DC' }}
+            buttonClassName='me-3'
+          />
+          <IconButton
+            onClick={setEdit.toggle}
             Icon={PencilSquare}
             iconProps={{ className: 'icon-cta' }}
+            buttonProps={{ title: 'Edit Bill' }}
           />
         </div>
       </div>

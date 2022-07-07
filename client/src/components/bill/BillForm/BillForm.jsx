@@ -348,6 +348,7 @@ const BillForm = ({ oldBillDetails, edit, changeEditToOff }) => {
             Icon={XSquareFill}
             onClick={changeEditToOff}
             iconProps={{ className: 'icon-cta' }}
+            buttonProps={{ title: 'Cancel' }}
           />
         ) : null}
       </div>

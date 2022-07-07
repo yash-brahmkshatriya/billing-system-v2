@@ -52,6 +52,7 @@ const BillCard = ({ bill }) => {
               Icon={BoxArrowUpRight}
               buttonClassName='mb-2'
               iconProps={{ className: 'bill-card-cta' }}
+              buttonProps={{ title: 'Go to Bill' }}
             />
             <IconButton
               onClick={(e) => {
@@ -62,6 +63,7 @@ const BillCard = ({ bill }) => {
                 fontSize: '22px',
                 className: 'bill-card-cta',
               }}
+              buttonProps={{ title: expanded ? 'Collapse' : 'Expand' }}
             />
           </div>
         </div>
