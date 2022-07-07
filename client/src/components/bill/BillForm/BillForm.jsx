@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { TrashFill } from 'react-bootstrap-icons';
+import { TrashFill, XSquareFill } from 'react-bootstrap-icons';
 import { nanoid } from 'nanoid';
 import dayjs from 'dayjs';
 import { useBoolean } from '@/base/hooks';
@@ -55,6 +55,18 @@ function getNewInitialItem() {
 
 function getInitialState() {
   return { ...INITIAL_STATE, items: [getNewInitialItem()] };
+}
+
+function changeDateFormats(obd) {
+  const oldBillDetails = JSON.parse(JSON.stringify(obd));
+  if (oldBillDetails) {
+    oldBillDetails.bill.date = dayjs(oldBillDetails.bill.date).format(
+      'YYYY-MM-DD'
+    );
+    oldBillDetails.dc.date = dayjs(oldBillDetails.dc.date).format('YYYY-MM-DD');
+    oldBillDetails.po.date = dayjs(oldBillDetails.po.date).format('YYYY-MM-DD');
+    return oldBillDetails;
+  } else return obd;
 }
 
 const FORM_ACTIONS = Object.freeze({
@@ -272,17 +284,18 @@ const BillForm = ({ oldBillDetails, edit, changeEditToOff }) => {
   // data hooks
   const [billState, billDispatch] = useReducer(
     billFormReducer,
-    edit ? oldBillDetails : getInitialState()
+    edit ? changeDateFormats(oldBillDetails) : getInitialState()
   );
-  const [loading, setLoading] = useBoolean(true);
+  const [loading, setLoading] = useBoolean(false);
   const [saveDisabled, setSaveDisabled] = useBoolean(false);
   const [showError, setShowError] = useBoolean(false);
 
   const getNextBillDetails = async () => {
+    setLoading.on();
     try {
       setLoading.on();
       const nextBillDates = await dispatch(
-        billActions.getNextBillDetails(billState.bill.date)
+        billActions.getNextBillDetails(billState.bill.date, params.billId)
       );
       billDispatch({
         type: FORM_ACTIONS.BILL_DC_NUMBER,
@@ -328,9 +341,16 @@ const BillForm = ({ oldBillDetails, edit, changeEditToOff }) => {
   if (loading) return <Loading />;
   return (
     <div className='bill-form'>
-      <h2 className='sub-heading bill-card primary mb-3'>
-        {edit ? 'Edit Bill' : 'Add Bill'}
-      </h2>
+      <div className='d-flex align-items-center justify-content-between bill-card primary mb-3'>
+        <h2 className='sub-heading m-0'>{edit ? 'Edit Bill' : 'Add Bill'}</h2>
+        {edit ? (
+          <IconButton
+            Icon={XSquareFill}
+            onClick={changeEditToOff}
+            iconProps={{ className: 'icon-cta' }}
+          />
+        ) : null}
+      </div>
       <div className='bill-field bill-card mb-3'>
         <StandardTextarea
           value={billState.partyDetails}

@@ -44,7 +44,11 @@ class BillController {
   async getLatestBillDetails(data, res) {
     try {
       let billDate = data.query.date ?? new Date().toISOString();
-      let bill = await this.getNextBillNumbers(data.user, billDate);
+      let bill = await this.getNextBillNumbers(
+        data.user,
+        billDate,
+        data.query.billId ?? null
+      );
       return responses.sendSuccess(res, bill);
     } catch (e) {
       return responses.sendServerError(res, data.url);
@@ -125,8 +129,6 @@ class BillController {
   async edit(data, res) {
     try {
       let body = data.body;
-      delete body.bill;
-      delete body.dc;
       delete body.owner;
       const requiredFields = ['partyDetails', 'items'];
       if (!common.checkKeys(body, requiredFields)) {
@@ -134,8 +136,20 @@ class BillController {
       }
       let bill = await Bills.findById(data.params.billId);
       bill.partyDetails = data.body.partyDetails;
-      // TODO: instead of setting items, update items
       bill.items = data.body.items;
+
+      const dateOfBill = new Date(data.body?.bill?.date) || NOW;
+      const dateOfDC = new Date(data.body?.dc?.date) || NOW;
+
+      let nextBillNumber = await this.getNextBillNumbers(
+        data.user,
+        dateOfBill.toISOString(),
+        data.params.billId
+      );
+
+      bill.bill = { number: nextBillNumber.billNumber, date: dateOfBill };
+      bill.dc = { number: nextBillNumber.dcNumber, date: dateOfDC };
+
       bill = await bill.save();
       if (bill) {
         return responses.sendSuccess(res, bill, messages.bills.bill_updated);
@@ -146,6 +160,7 @@ class BillController {
           messages.bills.bills_not_found
         );
     } catch (e) {
+      console.error(e);
       return responses.sendServerError(res, data.url);
     }
   }
@@ -188,13 +203,27 @@ class BillController {
     return { start: financialYearStartDate, end: financialYearEndDate };
   }
 
-  async getNextBillNumbers(user, billDate) {
+  async getNextBillNumbers(user, billDate, billId = null) {
     try {
       // bill Date in form of iso string or mm-dd-yyyy
       if (!billDate) throw new Error('Bill Date is required');
-
       const financialDates = this.getCurrentFinancialYearDates(billDate);
-      let bill = await Bills.findOne({
+      let bill;
+      if (billId) {
+        bill = await Bills.findById(billId);
+      }
+      if (
+        bill &&
+        financialDates.start <= new Date(bill.bill.date) &&
+        new Date(bill.bill.date) <= financialDates.end
+      ) {
+        return {
+          billNumber: bill.bill.number,
+          dcNumber: bill.dc.number,
+        };
+      }
+
+      bill = await Bills.findOne({
         owner: user._id,
         'bill.date': {
           $gte: financialDates.start,

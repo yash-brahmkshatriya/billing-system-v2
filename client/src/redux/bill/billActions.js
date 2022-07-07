@@ -18,11 +18,25 @@ export const getBills = (filters) => (dispatch) => {
     )
     .catch((err) => errorNoti(getErrorMessage(err)));
 };
+export const getSpecificBill = (billId) => (dispatch) => {
+  let url = BILL_URLS.SPECIFIC_BILL.replace('{billId}', billId);
+  return instance
+    .get(url)
+    .then((res) => dispatch(actions.setSingleBill({ bill: res.data.data })))
+    .catch((err) => {
+      if (err?.response?.status !== 404) {
+        errorNoti(getErrorMessage(err));
+      }
+      throw err;
+    });
+};
 
-export const getNextBillDetails = (date) => (dispatch) => {
+export const getNextBillDetails = (date, billId) => (dispatch) => {
   let url = BILL_URLS.NEXT_BILL_DETAILS;
+  let filters = { date };
+  if (billId) filters.billId = billId;
   if (date) {
-    url = url + '?' + queryString.stringify({ date: date });
+    url = url + '?' + queryString.stringify(filters);
   }
   return instance
     .get(url)
@@ -55,6 +69,7 @@ export const editBill = (billId, data) => (dispatch) => {
     })
     .catch((err) => {
       errorNoti(getErrorMessage(err));
+      throw err;
     });
 };
 

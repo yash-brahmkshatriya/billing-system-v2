@@ -1,6 +1,12 @@
 @import '@/styles/variables';
 
 .bill-form {
+  .icon-cta {
+    fill: #dddddd;
+    &:hover {
+      fill: white;
+    }
+  }
   .bill-card {
     background-color: white;
     padding: 1rem;
