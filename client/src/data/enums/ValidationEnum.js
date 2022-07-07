@@ -5,4 +5,5 @@ export const ValidationEnum = {
   COMPAREVALUE: 'CompareValue',
   MIN: 'Min',
   MAX: 'Max',
+  RELOP: 'Relop',
 };

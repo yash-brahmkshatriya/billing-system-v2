@@ -39,6 +39,12 @@ export const BillItemValidation = {
       value: /^[0-9]+(\.)?([0-9]+)?$/,
       message: 'Only numbers are allowed.',
     },
+    {
+      type: ValidationEnum.RELOP,
+      operator: '>',
+      value: 0,
+      message: 'It must be greater than 0.',
+    },
   ],
   unit: [
     {

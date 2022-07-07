@@ -13,7 +13,7 @@ export const getBills = (filters) => (dispatch) => {
     .get(url)
     .then((res) =>
       dispatch(
-        actions.setBillList({ billList: res.data.data, meta: res.data.meta })
+        actions.setBillList({ bills: res.data.data, meta: res.data.meta })
       )
     )
     .catch((err) => errorNoti(getErrorMessage(err)));

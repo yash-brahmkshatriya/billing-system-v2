@@ -1,0 +1,61 @@
+@import '@/styles/variables';
+
+li.bill-item-card {
+  background-color: white;
+  border-radius: $base-radius;
+
+  .item-header {
+    position: relative;
+    padding: 1rem;
+    padding-left: 2rem;
+
+    .bill-number {
+      $dims: 28px;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      height: $dims;
+      width: $dims;
+      background-color: $primary;
+      color: white;
+      border-radius: 50%;
+      display: inline-block;
+      line-height: $dims;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    .party-details {
+      white-space: pre-line;
+      font-weight: bold;
+    }
+    .bill-card-cta {
+      fill: gray;
+      &:hover {
+        fill: $primary;
+      }
+    }
+  }
+
+  .item-body {
+    padding: 0 1rem 1rem 1rem;
+    display: none;
+  }
+  &.expanded {
+    .item-body {
+      display: block;
+    }
+  }
+  .bill-items {
+    .bill-items-item {
+      border-bottom: 1px solid $base-grey;
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.5rem;
+      &:last-child {
+        border-bottom: none;
+      }
+      .description {
+        white-space: pre-line;
+      }
+    }
+  }
+}

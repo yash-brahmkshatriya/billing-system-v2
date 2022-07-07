@@ -2,6 +2,7 @@ import React, { useReducer, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { TrashFill } from 'react-bootstrap-icons';
 import { nanoid } from 'nanoid';
+import dayjs from 'dayjs';
 import { useBoolean } from '@/base/hooks';
 import * as billActions from '@/redux/bill/billActions';
 
@@ -16,6 +17,10 @@ import { BillValidation } from '@/validations/BillValidation';
 import validationFunctions from '@/utils/validationUtils';
 
 import './bill-form.scss';
+import { useNavigate, useParams } from 'react-router-dom';
+import { BILLS } from '@/data/routeUrls';
+import { removeFromObject } from '@/utils/generalUtils';
+import { calculateAmountOfItem, calculateGrandTotal } from '@/utils/billUtils';
 
 const INITIAL_ITEM = {
   description: '',
@@ -29,11 +34,11 @@ const INITIAL_ITEM = {
 const INITIAL_STATE = {
   bill: {
     number: '',
-    date: '',
+    date: dayjs().format('YYYY-MM-DD'),
   },
   dc: {
     number: '',
-    date: '',
+    date: dayjs().format('YYYY-MM-DD'),
   },
   po: {
     number: '',
@@ -74,7 +79,10 @@ function billFormReducer(state, action) {
     case FORM_ACTIONS.BILL_DATE:
       return { ...state, bill: { number: '', date: action.payload } };
     case FORM_ACTIONS.DC_DATE:
-      return { ...state, dc: { number: '', date: action.payload } };
+      return {
+        ...state,
+        dc: { ...state.dc, date: action.payload },
+      };
     case FORM_ACTIONS.BILL_DC_NUMBER:
       billNo = action.payload.billNumber;
       dcNo = action.payload.dcNumber;
@@ -142,7 +150,7 @@ const BillItem = ({ billDispatch, itemState, index, showError }) => {
             />
           </div>
           <div className='row'>
-            <div className='col-3'>
+            <div className='col-6 col-lg-3'>
               <div className='bill-field'>
                 <StandardInput
                   placeholder='e.g. 5000'
@@ -166,7 +174,7 @@ const BillItem = ({ billDispatch, itemState, index, showError }) => {
                 />
               </div>
             </div>
-            <div className='col-3'>
+            <div className='col-6 col-lg-3'>
               <div className='bill-field'>
                 <StandardInput
                   placeholder='e.g. kg'
@@ -189,7 +197,7 @@ const BillItem = ({ billDispatch, itemState, index, showError }) => {
                 />
               </div>
             </div>
-            <div className='col-6'>
+            <div className='col-12 col-lg-6'>
               <div className='bill-field'>
                 {/* <label htmlFor={`itemRate-${itemState._id}`}>Rate</label> */}
                 <div className='d-flex align-items-center'>
@@ -253,37 +261,64 @@ const BillItem = ({ billDispatch, itemState, index, showError }) => {
 
 const validations = BillValidation;
 
-const BillForm = ({ oldBillDetails, edit }) => {
+const BillForm = ({ oldBillDetails, edit, changeEditToOff }) => {
+  // redux hooks
   const dispatch = useDispatch();
+
+  // router hooks
+  const params = useParams();
+  const navigate = useNavigate();
+
+  // data hooks
   const [billState, billDispatch] = useReducer(
     billFormReducer,
-    getInitialState()
+    edit ? oldBillDetails : getInitialState()
   );
   const [loading, setLoading] = useBoolean(true);
+  const [saveDisabled, setSaveDisabled] = useBoolean(false);
   const [showError, setShowError] = useBoolean(false);
 
   const getNextBillDetails = async () => {
     try {
       setLoading.on();
-      const nextBillDates = await dispatch(billActions.getNextBillDetails());
+      const nextBillDates = await dispatch(
+        billActions.getNextBillDetails(billState.bill.date)
+      );
       billDispatch({
         type: FORM_ACTIONS.BILL_DC_NUMBER,
         payload: nextBillDates,
       });
     } catch (err) {
       console.error(err);
+      setSaveDisabled.on();
     } finally {
       setLoading.off();
     }
   };
 
-  const billFormSubmit = () => {
+  const billFormSubmit = async () => {
     const isValid = validationFunctions.checkFormValidity(
       billState,
       validations
     );
-    if (!isValid) setShowError.on();
-    console.log(isValid);
+    if (!isValid) {
+      setShowError.on();
+      return;
+    }
+    try {
+      setSaveDisabled.on();
+      if (edit) {
+        const billId = params.billId;
+        await dispatch(billActions.editBill(billId, billState));
+        changeEditToOff();
+      } else {
+        await dispatch(billActions.addBill(billState));
+        navigate(BILLS);
+      }
+    } catch (er) {
+    } finally {
+      setSaveDisabled.off();
+    }
   };
 
   useEffect(() => {
@@ -338,7 +373,10 @@ const BillForm = ({ oldBillDetails, edit }) => {
                   onChange={(e) =>
                     billDispatch({
                       type: FORM_ACTIONS.BILL_DATE,
-                      payload: e.target.value,
+                      payload:
+                        e.target.value === ''
+                          ? dayjs().format('YYYY-MM-DD')
+                          : e.target.value,
                     })
                   }
                   showError={showError}
@@ -373,7 +411,7 @@ const BillForm = ({ oldBillDetails, edit }) => {
                     })
                   }
                   showError={showError}
-                  validations={validations.dc.number}
+                  validations={validations.dc.date}
                 />
               </div>
             </div>
@@ -431,17 +469,25 @@ const BillForm = ({ oldBillDetails, edit }) => {
           ))}
         </ul>
       </div>
+      <div className='d-flex justify-content-between align-items-center bill-card primary mb-3'>
+        <h6 className='fw-bold m-0'>{billState.items.length} Item (s)</h6>
+        <h6 className='fw-bold m-0'>
+          Grand Total: {calculateGrandTotal(billState.items).toFixed(1)}
+        </h6>
+      </div>
       <div className='d-flex align-items-center'>
         <StandardButton
           color='btn-outline-primary'
           text='Add Item'
           className='me-3'
           onClick={() => billDispatch({ type: FORM_ACTIONS.ADD_ITEM })}
+          disabled={saveDisabled}
         />
         <StandardButton
           color='btn-primary'
           text='Save'
           onClick={billFormSubmit}
+          disabled={saveDisabled}
         />
       </div>
     </div>

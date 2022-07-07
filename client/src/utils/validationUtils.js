@@ -67,6 +67,36 @@ var validationFunctions = {
   },
 
   /**
+   * @param {value} value the value that needs to be tested.
+   * @param {relop} relational_operator on which values needs to be tested.
+   * @param {value}  comparisonValue expression that the value should satisfy.
+   *
+   * Returns true/false based on if the value is same as comparisonValue.
+   */
+  Relop: (value, comparisonValue, relop) => {
+    switch (relop) {
+      case '<':
+        return value < comparisonValue;
+      case '<=':
+        return value <= comparisonValue;
+      case '>':
+        return value > comparisonValue;
+      case '>=':
+        return value >= comparisonValue;
+      case '!=':
+        return value != comparisonValue;
+      case '==':
+        return value == comparisonValue;
+      case '&&':
+        return value && comparisonValue;
+      case '||':
+        return value || comparisonValue;
+      default:
+        return true;
+    }
+  },
+
+  /**
    * @param {object} value  field value to be validated
    * @param {[object]} validations  validation rules for the field
    *
@@ -99,7 +129,11 @@ var validationFunctions = {
       for (let validation of validations) {
         if (
           !validation.disabled &&
-          !validationFunctions[validation.type](value, validation.value)
+          !validationFunctions[validation.type](
+            value,
+            validation.value,
+            validation.operator
+          )
         ) {
           isValid = false;
           errorText = validation.message;
