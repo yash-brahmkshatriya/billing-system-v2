@@ -1,17 +1,17 @@
-const User = require("./model");
-const encryption = require("../../utils/encryption");
-const responses = require("../../utils/responses");
-const messages = require("../../utils/messages");
-const common = require("../../utils/common");
+const User = require('./model');
+const encryption = require('../../utils/encryption');
+const responses = require('../../utils/responses');
+const messages = require('../../utils/messages');
+const common = require('../../utils/common');
 
 class UserController {
   async create(data, res) {
     try {
-      const requiredFields = ["firstName", "userName", "password"];
+      const requiredFields = ['firstName', 'email', 'password'];
       if (!common.checkKeys(data.body, requiredFields)) {
         return responses.sendBadRequest(res, data.url);
       }
-      let user = await User.findOne({ userName: data.body.userName });
+      let user = await User.findOne({ email: data.body.email });
       if (user) {
         return responses.sendForbidden(res, data.url, messages.user.user_exist);
       }
@@ -19,21 +19,30 @@ class UserController {
         data.body.password
       );
       user = await User.create(data.body);
-      return responses.sendSuccess(res, null, messages.user.user_created);
+      const criteriaForJWT = {
+        _id: user._id,
+        date: new Date(),
+      };
+
+      const token = await encryption.generateAuthToken(criteriaForJWT);
+      res.cookie('Authorization', token, {});
+      return responses.sendSuccess(
+        res,
+        { token, user },
+        messages.user.user_created
+      );
     } catch (err) {
       return responses.sendServerError(res, data.url, err);
     }
   }
   async login(data, res) {
     try {
-      const requiredFields = ["userName", "password"];
+      const requiredFields = ['email', 'password'];
       if (!common.checkKeys(data.body, requiredFields)) {
         return responses.sendBadRequest(res, data.url);
       }
-      const { userName, password } = data.body;
-      let user = await User.findOne({
-        $or: [{ userName }, { email: userName }],
-      });
+      const { email, password } = data.body;
+      let user = await User.findOne({ email });
 
       if (!user) {
         return responses.sendNotFound(
@@ -53,7 +62,7 @@ class UserController {
         };
 
         const token = await encryption.generateAuthToken(criteriaForJWT);
-        res.cookie("Authorization", token, {});
+        res.cookie('Authorization', token, {});
         return responses.sendSuccess(
           res,
           { token },
@@ -90,12 +99,16 @@ class UserController {
       let body = data.body;
       delete body.password;
       delete body.userName;
+      delete body.email;
 
-      let user = await User.findByIdAndUpdate(
+      let user = await User.findById(data.params.userId).lean();
+      Object.keys(body).forEach((key) => (user[key] = body[key]));
+
+      user = await User.findByIdAndUpdate(
         data.params.userId,
-        { $set: body },
+        { $set: user },
         { new: true }
-      ).select("-password");
+      ).select('-password');
 
       return responses.sendSuccess(res, user, messages.user.user_updated);
     } catch (e) {
@@ -128,19 +141,19 @@ class UserController {
       return responses.sendServerError(res, data.url);
     }
   }
-  async checkUserName(data, res) {
+  async checkEmail(data, res) {
     try {
-      let user = await User.findOne({ userName: data.body.userName });
+      let user = await User.findOne({ email: data.query.email });
 
       if (user) {
-        return responses.sendForbidden(
-          res,
-          data.url,
-          messages.user.username_exists
-        );
+        return responses.sendSuccess(res, messages.user.email_exists);
       }
 
-      return responses.sendSuccess(res, messages.user.username_available);
+      return responses.sendNotFound(
+        res,
+        data.url,
+        messages.user.user_not_found
+      );
     } catch (err) {
       returnresponse.sendSystemError(res, err);
     }

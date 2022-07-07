@@ -1,0 +1,89 @@
+@import '@/styles/variables.scss';
+
+.standard-textarea {
+  text-align: left;
+
+  textarea {
+    border-radius: 3px;
+    border: 1px solid $base-border;
+    font-size: 1rem;
+    padding: 0.5rem;
+    &:focus {
+      box-shadow: 0 0 0 0.15rem rgba($primary, 0.3);
+    }
+
+    &.error {
+      border: solid 1px $base-danger;
+      color: $base-danger;
+    }
+
+    //Hide up and down incrementors for input box
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    &[type='number'] {
+      -moz-appearance: textfield;
+    }
+  }
+  ::placeholder {
+    color: $base-hint;
+  }
+
+  label {
+    font-size: 1rem;
+    color: $base-label;
+    font-weight: 400;
+  }
+
+  .help-text {
+    font-size: 0.75rem;
+    opacity: 0.5;
+  }
+  .error-text {
+    font-size: 0.75rem;
+    color: $base-danger;
+  }
+}
+.error {
+  textarea {
+    border: 1px solid $base-danger;
+    color: $base-danger;
+  }
+}
+
+.otp {
+  display: inline-block;
+  input {
+    font-size: 20px;
+  }
+}
+
+.icon-text {
+  position: absolute;
+  bottom: 12%;
+  margin-left: 16px;
+  color: $base-hint !important;
+  &.after {
+    left: calc(100% - 40px);
+  }
+}
+
+.form-control {
+  &.has-feedback {
+    padding-right: 30px;
+    + .icon {
+      position: absolute;
+      right: 0;
+      padding-right: 8px;
+      margin-top: -32px;
+      color: #919191;
+      cursor: pointer;
+    }
+  }
+  &.after-icon {
+    padding-right: 25px;
+  }
+}

@@ -7,7 +7,7 @@
  */
 const checkKeys = (data, keys) => {
   for (let key of keys) {
-    if (data[key] === undefined || data[key] === null || data[key] === "") {
+    if (data[key] === undefined || data[key] === null || data[key] === '') {
       return false;
     }
   }
@@ -15,21 +15,36 @@ const checkKeys = (data, keys) => {
 };
 
 /**
- * @function subsetOfObject
+ * @function pickFromObject
  * Subset of Object
  * @param {Object} data Initial Data
  * @param {Array} keys Keys required in subset
  * @returns {Object} Object with given keys if present
  */
-const subsetOfObject = (data, keys) => {
-  const subset = {};
+function pickFromObject(object, keys) {
+  const ans = {};
   for (let key of keys) {
-    if (data[key]) subset[key] = data[key];
+    ans[key] = object[key] ?? null;
   }
-  return subset;
-};
+  return ans;
+}
+
+/**
+ * @function removeFromObject
+ * Subset of Object
+ * @param {Object} data Initial Data
+ * @param {Array} keys Keys to be removed from data
+ * @returns {Object} Object with removed keys if present
+ */
+function removeFromObject(object, keys) {
+  for (let key of keys) {
+    delete object[key];
+  }
+  return object;
+}
 
 module.exports = {
   checkKeys,
-  subsetOfObject,
+  pickFromObject,
+  removeFromObject,
 };

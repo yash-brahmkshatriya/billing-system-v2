@@ -1,0 +1,11 @@
+@import '@/styles/variables';
+
+.bill-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  li {
+    margin: 0;
+    margin-bottom: 1rem;
+  }
+}

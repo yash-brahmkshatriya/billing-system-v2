@@ -1,21 +1,24 @@
-const Bills = require("./model");
-const responses = require("../../utils/responses");
-const messages = require("../../utils/messages");
-const common = require("../../utils/common");
-const { pagination } = require("../../config");
+const Bills = require('./model');
+const responses = require('../../utils/responses');
+const messages = require('../../utils/messages');
+const common = require('../../utils/common');
+const { pagination } = require('../../config');
 
 class BillController {
   async create(data, res) {
     try {
-      const requiredFields = ["partyDetails", "items"];
+      const requiredFields = ['partyDetails', 'items'];
       if (!common.checkKeys(data.body, requiredFields)) {
         return responses.sendBadRequest(res, data.url);
       }
+      data.body.items = data.body.items.map((item) =>
+        common.removeFromObject(item, ['_id'])
+      );
       data.body.owner = data.user._id;
 
       const NOW = new Date();
-      const dateOfBill = data.body?.bill?.date || NOW;
-      const dateOfDC = data.body?.dc?.date || NOW;
+      const dateOfBill = new Date(data.body?.bill?.date) || NOW;
+      const dateOfDC = new Date(data.body?.dc?.date) || NOW;
 
       let nextBillNumber = await this.getNextBillNumbers(
         data.user,
@@ -41,7 +44,11 @@ class BillController {
   async getLatestBillDetails(data, res) {
     try {
       let billDate = data.query.date ?? new Date().toISOString();
-      let bill = await this.getNextBillNumbers(data.user, billDate);
+      let bill = await this.getNextBillNumbers(
+        data.user,
+        billDate,
+        data.query.billId ?? null
+      );
       return responses.sendSuccess(res, bill);
     } catch (e) {
       return responses.sendServerError(res, data.url);
@@ -55,7 +62,7 @@ class BillController {
       let page = parseInt(data.query.page) || 1;
       let limit = parseInt(data.query.limit) || pagination.size;
       let skip = (page - 1) * limit;
-      let sortBy = data.query.sortBy || "_id";
+      let sortBy = data.query.sortBy || '-_id';
       delete data.query.page;
       delete data.query.limit;
       delete data.query.sortBy;
@@ -81,7 +88,7 @@ class BillController {
         endDate = financialDates.end;
       }
 
-      data.query["bill.date"] = {
+      data.query['bill.date'] = {
         $gte: startDate,
         $lte: endDate,
       };
@@ -122,16 +129,27 @@ class BillController {
   async edit(data, res) {
     try {
       let body = data.body;
-      delete body.bill;
-      delete body.dc;
       delete body.owner;
-      const requiredFields = ["partyDetails", "items"];
+      const requiredFields = ['partyDetails', 'items'];
       if (!common.checkKeys(body, requiredFields)) {
         return responses.sendBadRequest(res, data.url);
       }
       let bill = await Bills.findById(data.params.billId);
       bill.partyDetails = data.body.partyDetails;
       bill.items = data.body.items;
+
+      const dateOfBill = new Date(data.body?.bill?.date) || NOW;
+      const dateOfDC = new Date(data.body?.dc?.date) || NOW;
+
+      let nextBillNumber = await this.getNextBillNumbers(
+        data.user,
+        dateOfBill.toISOString(),
+        data.params.billId
+      );
+
+      bill.bill = { number: nextBillNumber.billNumber, date: dateOfBill };
+      bill.dc = { number: nextBillNumber.dcNumber, date: dateOfDC };
+
       bill = await bill.save();
       if (bill) {
         return responses.sendSuccess(res, bill, messages.bills.bill_updated);
@@ -142,6 +160,7 @@ class BillController {
           messages.bills.bills_not_found
         );
     } catch (e) {
+      console.error(e);
       return responses.sendServerError(res, data.url);
     }
   }
@@ -184,22 +203,36 @@ class BillController {
     return { start: financialYearStartDate, end: financialYearEndDate };
   }
 
-  async getNextBillNumbers(user, billDate) {
+  async getNextBillNumbers(user, billDate, billId = null) {
     try {
       // bill Date in form of iso string or mm-dd-yyyy
-      if (!billDate) throw new Error("Bill Date is required");
-
+      if (!billDate) throw new Error('Bill Date is required');
       const financialDates = this.getCurrentFinancialYearDates(billDate);
-      let bill = await Bills.findOne({
+      let bill;
+      if (billId) {
+        bill = await Bills.findById(billId);
+      }
+      if (
+        bill &&
+        financialDates.start <= new Date(bill.bill.date) &&
+        new Date(bill.bill.date) <= financialDates.end
+      ) {
+        return {
+          billNumber: bill.bill.number,
+          dcNumber: bill.dc.number,
+        };
+      }
+
+      bill = await Bills.findOne({
         owner: user._id,
-        "bill.date": {
+        'bill.date': {
           $gte: financialDates.start,
           $lte: financialDates.end,
         },
       })
-        .sort({ "bill.number": -1 })
+        .sort({ 'bill.number': -1 })
         .limit(1)
-        .select("bill.number dc.number");
+        .select('bill.number dc.number');
       if (bill)
         return {
           billNumber: bill.bill.number + 1,

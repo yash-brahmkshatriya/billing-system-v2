@@ -1,0 +1,16 @@
+@import '@/styles/variables';
+
+.app-layout {
+  .header {
+    background-color: white;
+    display: none;
+    @media screen and (max-width: 768px) {
+      display: flex;
+      align-items: center;
+    }
+  }
+  .content {
+    background-color: $base-background;
+    overflow: auto;
+  }
+}

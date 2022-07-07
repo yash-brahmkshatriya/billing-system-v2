@@ -1,0 +1,96 @@
+@import '@/styles/variables';
+
+.standard-input {
+  text-align: left;
+
+  input {
+    border-radius: $base-radius;
+    border: solid 1px $base-border;
+    height: 3rem;
+    font-size: 1rem;
+    padding: 0.5rem;
+
+    &:focus {
+      box-shadow: 0 0 0 0.15rem rgba($primary, 0.3);
+    }
+    &:disabled {
+      color: $base-hint;
+      background: inherit;
+      cursor: not-allowed;
+    }
+
+    &.error {
+      border: solid 1px $base-danger;
+      color: $base-danger;
+      &:focus {
+        box-shadow: 0 0 0 0.15rem rgba($base-danger, 0.3);
+      }
+    }
+
+    //Hide up and down incrementors for input box
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    &[type='number'] {
+      -moz-appearance: textfield;
+    }
+  }
+  ::placeholder {
+    color: $base-hint;
+  }
+
+  label {
+    font-size: 1rem;
+    color: $base-label;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  .help-text {
+    font-size: 0.75rem;
+    opacity: 0.5;
+  }
+  .error-text {
+    font-size: 0.75rem;
+    color: $base-danger;
+  }
+  .error {
+    input {
+      border: solid 1px $base-danger;
+      color: $base-danger;
+      &:focus {
+        box-shadow: 0 0 0 0.15rem rgba($base-danger, 0.3);
+      }
+    }
+  }
+
+  .icon-text {
+    position: absolute;
+    bottom: 12%;
+    margin-left: 16px;
+    color: $base-hint !important;
+    &.after {
+      left: calc(100% - 40px);
+    }
+  }
+}
+
+.form-control {
+  &.has-feedback {
+    padding-right: 30px;
+    + .icon {
+      position: absolute;
+      right: 0;
+      padding-right: 8px;
+      margin-top: -35px;
+      color: #919191;
+      cursor: pointer;
+    }
+  }
+  &.after-icon {
+    padding-right: 25px;
+  }
+}
