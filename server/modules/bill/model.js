@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const BillModel = mongoose.Schema(
   {
@@ -11,7 +11,7 @@ const BillModel = mongoose.Schema(
       date: { type: Date, required: true },
     },
     po: {
-      number: { type: Number },
+      number: { type: String },
       date: { type: Date },
     },
     items: [
@@ -19,7 +19,7 @@ const BillModel = mongoose.Schema(
         description: { type: String, required: true },
         rate: { type: Number, required: true },
         quantity: { type: Number, required: true },
-        unit: { type: String, required: true, default: "Nos." },
+        unit: { type: String, required: true, default: 'Nos.' },
         qtyPerUnit: { type: Number, required: true, default: 1 },
         amount: { type: Number },
       },
@@ -41,7 +41,13 @@ const BillModel = mongoose.Schema(
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: 'users',
+    },
+    totalAmount: {
+      type: Number,
+    },
+    roundOff: {
+      type: Number,
     },
     grandTotal: {
       type: Number,
@@ -54,15 +60,17 @@ const BillModel = mongoose.Schema(
     },
   }
 );
-BillModel.pre("save", function (next) {
+BillModel.pre('save', function (next) {
   this.items.forEach(
     (item) => (item.amount = (item.rate * item.quantity) / item.qtyPerUnit)
   );
-  this.grandTotal = this.items.reduce(
+  this.totalAmount = this.items.reduce(
     (sumTillNow, item) => sumTillNow + item.amount,
     0
   );
+  this.grandTotal = Math.round(this.totalAmount);
+  this.roundOff = this.grandTotal - this.totalAmount;
   next();
 });
 
-module.exports = mongoose.model("bills", BillModel);
+module.exports = mongoose.model('bills', BillModel);

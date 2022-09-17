@@ -1,0 +1,24 @@
+<td>
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th class="sr-no-head">Sr.No.</th>
+        <th class="description-head">Description</th>
+        <th class="qty-head">Qty</th>
+        <th class="rate-head">Rate (Rs.)</th>
+        <th class="amount-head">Amount (Rs.)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each this.items}}
+      <tr>
+        <td class="sr-no">{{add @index 1}}</td>
+        <td class="description">{{description}}</td>
+        <td class="qty">{{quantity}} {{unit}}</td>
+        <td class="rate">{{rate}} per {{qtyPerUnit}} {{unit}}</td>
+        <td class="amount">{{toFixed amount 2}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</td>

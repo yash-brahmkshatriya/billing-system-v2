@@ -1,0 +1,329 @@
+<html lang='en'>
+
+<head>
+  <meta charset='UTF-8' />
+  <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+  <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+  <title>Document</title>
+  {{!--
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css'
+    integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm' crossorigin='anonymous' /> --}}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bungee&family=Fredoka+One&family=Peralta&family=Righteous&family=Open+Sans&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --base-primary: #0d21a1;
+      --base-success: #0ca75f;
+      --base-danger: #f23e3e;
+      --base-primary-dark: #011638;
+      --base-dark: #141414;
+      --base-secondary: #eec643;
+      --base-background: #eef0f2;
+
+      --page-padding: 2.5rem;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-size: 12px;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    html {
+      -webkit-print-color-adjust: exact;
+    }
+
+    body {
+      background-color: white;
+      color: black;
+      font-family: "Open Sans", Helvetica, sans-serif !important;
+      font-style: normal;
+    }
+
+    table {
+      page-break-inside: auto !important;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    tr {
+      page-break-inside: avoid !important;
+      page-break-after: auto !important;
+    }
+
+    thead {
+      display: table-header-group !important;
+    }
+
+    tfoot {
+      display: table-footer-group !important;
+    }
+
+    .main-table {
+      border: 1px solid black;
+    }
+
+    .main-table>tbody>tr {
+      border-bottom: 1px solid black;
+    }
+
+    .main-table>thead>tr {
+      border-bottom: 1px solid black;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .firm-name {
+      text-align: center;
+      font-family: 'Peralta', sans-serif;
+      font-size: 3rem;
+      padding: 0.5rem;
+    }
+
+    .address-contact-table td {
+      padding: 0.25rem;
+    }
+
+    .address-contact-table td {
+      font-size: 1.25rem;
+    }
+
+    .address-contact-table td.address {
+      width: 75%;
+      border-right: 1px solid black;
+    }
+
+    .address-contact-table td.phone {
+      font-weight: bold;
+    }
+
+    .bill-type {
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 2rem;
+      letter-spacing: 3px;
+      padding: 0.25rem;
+    }
+
+    .party-dates-table td {
+      padding: 0.25rem 0.5rem;
+    }
+
+    .party-dates-table td.party-details {
+      width: 60%;
+      border-right: 1px solid black;
+      vertical-align: top;
+    }
+
+    .party-dates-table td.party-details .party-details-text {
+      white-space: pre-line;
+    }
+
+    .party-dates-table td.dates {
+      width: 40%;
+    }
+
+
+    .items-table td,
+    .items-table th {
+      padding: 0.5rem 0.25rem;
+    }
+
+    .items-table>thead tr {
+      background-color: #2e2e2e;
+      color: white;
+    }
+
+    .items-table>tbody tr {
+      border-bottom: 1px solid black;
+    }
+
+    .items-table>thead tr>th {
+      border-right: 1px solid white;
+    }
+
+    .items-table>thead tr>th:last-of-type {
+      border-right: none;
+    }
+
+    .items-table>tbody tr>td {
+      border-right: 1px solid black;
+    }
+
+    .items-table>tbody tr>td:last-of-type {
+      border-right: none;
+    }
+
+    .items-table>thead .sr-no-head {
+      width: 5%;
+    }
+
+    .items-table>thead .description-head {
+      width: 44.5%;
+    }
+
+    .items-table>thead .amount-head {
+      width: 16.2%;
+    }
+
+
+    .items-table>tbody .sr-no,
+    .items-table>tbody .qty,
+    .items-table>tbody .rate {
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .items-table>tbody .amount {
+      text-align: end;
+      vertical-align: middle;
+    }
+
+    .items-table>tbody .description {
+      white-space: pre-line;
+      padding-left: 0.5rem;
+    }
+
+
+    .amounts-table tr {
+      border-bottom: 1px solid black;
+    }
+
+    .amounts-table tr:last-of-type {
+      border-bottom: none;
+    }
+
+    .amounts-table td {
+      padding: 0.25rem 0.5rem;
+      border-right: 1px solid black;
+    }
+
+    .amounts-table td:last-of-type {
+      border-right: none;
+    }
+
+    .amounts-table .in-words {
+      width: 50%;
+    }
+
+    .amounts-table .amount-head {
+      width: 34%;
+      font-weight: bold;
+      text-align: end;
+    }
+
+    .amounts-table .amount {
+      text-align: end;
+      font-weight: bold;
+    }
+
+
+    .terms-table td {
+      padding: 0.5rem 0.5rem;
+      border-right: 1px solid black;
+    }
+
+    .terms-table td:last-of-type {
+      border-right: none;
+    }
+
+    .terms-table td.terms {
+      width: 50%;
+    }
+
+    .terms-table td.sign {
+      width: 50%;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.5rem;
+    }
+
+    .terms-table td.sign .sign-line-1 {
+      margin-bottom: 4rem;
+    }
+
+    .terms-table td.sign .sign-firm-name {
+      font-family: "Peralta", sans-serif;
+      font-weight: normal;
+    }
+
+
+
+
+    .page {
+      padding: var(--page-padding);
+      padding-top: 0;
+      position: relative;
+      -webkit-print-color-adjust: exact;
+    }
+
+    @page {
+      size: A4 potrait;
+      margin-top: 60px;
+      margin-bottom: 60px;
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+
+    @media print {
+      table {
+        border-width: 1px !important;
+      }
+
+      td,
+      th {
+        border-width: 0px 1px 0px 0px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <table class="main-table">
+      <thead>
+        <tr>
+          {{> firmName this }}
+        </tr>
+        <tr>
+          {{> addressContact this}}
+        </tr>
+        <tr class="text-center">
+          <td class="bill-type">DC</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          {{> partyAndDates this}}
+        </tr>
+        <tr>
+          {{> itemsDc this }}
+        </tr>
+        <tr>
+          {{> amountsTable this }}
+        </tr>
+        <tr>
+          {{> termsSign this}}
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+
+</html>
