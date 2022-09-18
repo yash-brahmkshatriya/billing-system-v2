@@ -1,36 +1,15 @@
-<td>
-  <table class="amounts-table">
-    <tr>
-      <td style="width: 50%;">
-        <table>
-          <tr>
-            <td></td>
-          </tr>
-          <tr>
-            <td></td>
-          </tr>
-          <tr>
-            <td class="in-words"><i><strong>In Word : </strong>{{toWords grandTotal}}</i></td>
-          </tr>
-        </table>
-      </td>
-      <td style="width: 50%;">
-        <table>
-          <tr>
-            <td class="amount-head">Total Amount</td>
-            <td class="amount">{{toFixed totalAmount 2}}</td>
-          </tr>
-          <tr>
-            <td class="amount-head">Round Off</td>
-            <td class="amount">{{#ifRelop roundOff '>' 0}} + {{/ifRelop}} {{toFixed roundOff 2}}</td>
-          </tr>
-          <tr>
-            <td class="amount-head">Grand Total</td>
-            <td class="amount">{{toFixed grandTotal 2}}</td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-
-  </table>
-</td>
+<tr class="amounts-row">
+  <td colspan="7"></td>
+  <td colspan="3" class="amount-head">Total Amount</td>
+  <td colspan="2" class="amount">{{toFixed totalAmount 2}}</td>
+</tr>
+<tr class="amounts-row">
+  <td colspan="7"></td>
+  <td colspan="3" class="amount-head">Round Off</td>
+  <td colspan="2" class="amount">{{#ifRelop roundOff '>' 0}} + {{/ifRelop}} {{toFixed roundOff 2}}</td>
+</tr>
+<tr class="amounts-row">
+  <td colspan="7" class="in-words"><i><strong>In Word : </strong>{{toWords grandTotal}}</i></td>
+  <td colspan="3" class="amount-head">Grand Total</td>
+  <td colspan="2" class="amount">{{toFixed grandTotal 2}}</td>
+</tr>

@@ -1,27 +1,34 @@
-<td>
-  <table class="party-dates-table">
+<td class="party-dates-row party-details" colspan="7">
+  <strong>M/s : </strong>
+  <div class="party-details-text">
+    {{partyDetails}}
+  </div>
+</td>
+
+<td class="party-dates-row dates" colspan="5">
+  <table class="dates-table">
     <tr>
-      <td class="party-details">
-        <strong>M/s : </strong>
-        <div class="party-details-text">
-          {{partyDetails}}
-        </div>
+      <td>
+        Bill No.: {{bill.number}}
       </td>
-      <td class="dates">
-        <table>
-          <tr>
-            <td>Bill No.: {{bill.number}} </td>
-            <td>Date: {{formatDate bill.date "DD/MM/YYYY"}} </td>
-          </tr>
-          <tr>
-            <td>DC No.: {{dc.number}}</td>
-            <td>Date: {{formatDate dc.date "DD/MM/YYYY"}}</td>
-          </tr>
-          <tr>
-            <td>PO No.: {{po.number}}</td>
-            <td>Date: {{formatDate po.date "DD/MM/YYYY"}}</td>
-          </tr>
-        </table>
+      <td>
+        Date: {{formatDate bill.date "DD/MM/YYYY"}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        DC No.: {{dc.number}}
+      </td>
+      <td>
+        Date: {{formatDate dc.date "DD/MM/YYYY"}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        PO No.: {{po.number}}
+      </td>
+      <td>
+        Date: {{formatDate po.date "DD/MM/YYYY"}}
       </td>
     </tr>
   </table>

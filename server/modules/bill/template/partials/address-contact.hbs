@@ -1,12 +1,7 @@
-<td class="text-center">
-  <table class="address-contact-table">
-    <tr class="text-center">
-      <td class="address">
-        {{formatAddress owner.address}}
-      </td>
-      <td class="phone">
-        M : {{owner.phone}}
-      </td>
-    </tr>
-  </table>
+<td class="address-contact-row address" colspan="9">
+  {{formatAddress owner.address}}
+</td>
+
+<td class="address-contact-row phone" colspan="3">
+  M : {{owner.phone}}
 </td>

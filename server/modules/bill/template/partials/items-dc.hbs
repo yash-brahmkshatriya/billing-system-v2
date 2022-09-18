@@ -1,37 +1,12 @@
-<td>
-  <table class="items-table">
-    <thead>
-      <tr>
-        <th class="sr-no-head">Sr.No.</th>
-        <th class="description-head">Description</th>
-        <th class="qty-head">Qty</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each this.items}}
-      <tr>
-        <td class="sr-no">{{add @index 1}}</td>
-        <td class="description">{{description}}</td>
-        <td class="qty">{{quantity}} {{unit}}</td>
-      </tr>
-      {{/each}}
-    </tbody>
-  </table>
-  <table class="amounts-table">
-    <tr>
-      <td></td>
-      <td class="amount-head">Total Amount</td>
-      <td class="amount">{{toFixed totalAmount 2}}</td>
-    </tr>
-    <tr>
-      <td></td>
-      <td class="amount-head">Round Off</td>
-      <td class="amount">{{#ifRelop roundOff '>' 0}} + {{/ifRelop}} {{toFixed roundOff 2}}</td>
-    </tr>
-    <tr>
-      <td class="in-words"><i><strong>In Word : </strong>{{toWords grandTotal}}</i></td>
-      <td class="amount-head">Grand Total</td>
-      <td class="amount">{{toFixed grandTotal 2}}</td>
-    </tr>
-  </table>
-</td>
+<tr class="items-row items-row-head">
+  <th colspan="1" class="sr-no-head">Sr.No.</th>
+  <th colspan="8" class="description-head">Description</th>
+  <th colspan="3" class="qty-head">Qty</th>
+</tr>
+{{#each this.items}}
+<tr class="items-row items-row-body">
+  <td colspan="1" class="sr-no">{{add @index 1}}</td>
+  <td colspan="8" class="description">{{description}}</td>
+  <td colspan="3" class="qty">{{quantity}} {{unit}}</td>
+</tr>
+{{/each}}

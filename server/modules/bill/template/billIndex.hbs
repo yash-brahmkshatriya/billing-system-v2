@@ -96,20 +96,17 @@
       padding: 0.5rem;
     }
 
-    .address-contact-table td {
+    .address-contact-row {
       padding: 0.25rem;
-    }
-
-    .address-contact-table td {
       font-size: 1.25rem;
+      text-align: center;
     }
 
-    .address-contact-table td.address {
-      width: 75%;
+    .address-contact-row.address {
       border-right: 1px solid black;
     }
 
-    .address-contact-table td.phone {
+    .address-contact-row.phone {
       font-weight: bold;
     }
 
@@ -121,157 +118,129 @@
       padding: 0.25rem;
     }
 
-    .party-dates-table td {
-      padding: 0.25rem 0.5rem;
+    .party-dates-row {
+      padding: 0.5rem;
     }
 
-    .party-dates-table td.party-details {
-      width: 60%;
+    .party-dates-row.party-details {
       border-right: 1px solid black;
       vertical-align: top;
     }
 
-    .party-dates-table td.party-details .party-details-text {
+    .party-dates-row.party-details .party-details-text {
       white-space: pre-line;
     }
 
-    .party-dates-table td.dates {
-      width: 40%;
+    .party-dates-row.dates .dates-table {
+      margin-left: 25px;
+    }
+
+    .party-dates-row.dates .dates-table td {
+      padding: 0.25rem 0.25rem;
     }
 
 
-    .items-table td,
-    .items-table th {
+
+    .items-row td,
+    .items-row th {
       padding: 0.5rem 0.25rem;
     }
 
-    .items-table>thead tr {
+    .items-row.items-row-head {
       background-color: #2e2e2e;
       color: white;
     }
 
-    .items-table>tbody tr {
-      border-bottom: 1px solid black;
-    }
-
-    .items-table>thead tr>th {
+    .items-row.items-row-head>th {
       border-right: 1px solid white !important;
       -webkit-print-color-adjust: exact;
     }
 
-    .items-table>thead tr>th:last-of-type {
-      border-right: none;
+    .items-row.items-row-head>th:last-of-type {
+      border-right: none !important;
     }
 
-    .items-table>tbody tr>td {
+    .items-row.items-row-body {
+      border-bottom: 1px solid black;
+    }
+
+    .items-row.items-row-body>td {
       border-right: 1px solid black;
     }
 
-    .items-table>tbody tr>td:last-of-type {
+    .items-row.items-row-body>td:last-of-type {
       border-right: none;
     }
 
-    .items-table>thead .sr-no-head {
-      width: 5%;
-    }
-
-    .items-table>thead .description-head {
-      /*width: 44.5%;*/
-      width: 55%;
-    }
-
-    /*.items-table>thead .amount-head {
-      width: 16.2%;
-    }*/
-
-    .items-table>thead .qty-head,
-    .rate-head {
-      width: 16%;
-    }
-
-
-    .items-table>tbody .sr-no,
-    .items-table>tbody .qty,
-    .items-table>tbody .rate {
+    .items-row.items-row-body .sr-no,
+    .items-row.items-row-body .qty,
+    .items-row.items-row-body .rate {
       text-align: center;
       vertical-align: middle;
     }
 
-    .items-table>tbody .amount {
+    .items-row.items-row-body .amount {
       text-align: end;
       vertical-align: middle;
     }
 
-    .items-table>tbody .description {
+    .items-row.items-row-body .description {
       white-space: pre-line;
       padding-left: 0.5rem;
     }
 
 
-    .amounts-table tr {
+    .amounts-row {
       border-bottom: 1px solid black;
     }
 
-    .amounts-table tr:last-of-type {
+    .amounts-row:last-of-type {
       border-bottom: none;
     }
 
-    .amounts-table td {
+    .amounts-row td {
       padding: 0.25rem 0.5rem;
       border-right: 1px solid black;
     }
 
-    .amounts-table td:last-of-type {
+    .amounts-row td:last-of-type {
       border-right: none;
     }
 
-    .amounts-table .in-words {
-      width: 50%;
-    }
-
-    .amounts-table .amount-head {
-      width: 34%;
+    .amounts-row .amount-head {
       font-weight: bold;
       text-align: end;
     }
 
-    .amounts-table .amount {
+    .amounts-row .amount {
       text-align: end;
       font-weight: bold;
     }
 
-
-    .terms-table td {
+    .terms-row td {
       padding: 0.5rem 0.5rem;
       border-right: 1px solid black;
     }
 
-    .terms-table td:last-of-type {
+    .terms-row td:last-of-type {
       border-right: none;
     }
 
-    .terms-table td.terms {
-      width: 50%;
-    }
 
-    .terms-table td.sign {
-      width: 50%;
+    .terms-row td.sign {
       text-align: center;
       font-weight: 600;
       font-size: 1.5rem;
     }
 
-    .terms-table td.sign .sign-line-1 {
+    .terms-row td.sign .sign-line-1 {
       margin-bottom: 4rem;
     }
 
-    .terms-table td.sign .sign-firm-name {
+    .terms-row td.sign .sign-firm-name {
       font-family: "Peralta", sans-serif;
       font-weight: normal;
     }
-
-
-
 
     .page {
       padding: var(--page-padding);
@@ -306,6 +275,22 @@
   <div class="page">
     <table class="main-table">
       <thead>
+        <tr style="display: none;">
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.7%;">C</th>
+        </tr>
+      </thead>
+      <tbody>
         <tr>
           {{> firmName this }}
         </tr>
@@ -313,20 +298,17 @@
           {{> addressContact this}}
         </tr>
         <tr class="text-center">
-          <td class="bill-type">BILL</td>
+          <td class="bill-type" colspan="12">BILL</td>
         </tr>
-      </thead>
-      <tbody>
         <tr>
           {{> partyAndDates this}}
         </tr>
-        <tr>
-          {{> itemsBill this }}
-        </tr>
-        <tr>
-          {{> amountsTable this }}
-        </tr>
-        <tr>
+
+        {{> itemsBill this }}
+
+        {{> amountsTable this }}
+
+        <tr class="terms-row">
           {{> termsSign this}}
         </tr>
       </tbody>

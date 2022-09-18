@@ -1,26 +1,21 @@
-<td>
-  <table class="terms-table">
-    <tr>
-      <td class="terms">
-        <strong>Terms & Conditions:</strong>
-        {{#each owner.termsAndConditions}}
-        <div>
-          ({{add @index 1}}) {{this}}
-        </div>
-        {{/each}}
-      </td>
-      <td class="sign">
-        <div class="sign-line-1">
-          <i>For, </i> <span class="sign-firm-name">{{owner.firmName}}</span>
-        </div>
+<td class="terms" colspan="7">
+  <strong>Terms & Conditions:</strong>
+  {{#each owner.termsAndConditions}}
+  <div>
+    ({{add @index 1}}) {{this}}
+  </div>
+  {{/each}}
+</td>
 
-        <div>
-          <i>
-            Authorised Signatory
-          </i>
-        </div>
+<td colspan="5" class="sign">
+  <div class="sign-line-1">
+    <i>For, </i> <span class="sign-firm-name">{{owner.firmName}}</span>
+  </div>
 
-      </td>
-    </tr>
-  </table>
+  <div>
+    <i>
+      Authorised Signatory
+    </i>
+  </div>
+
 </td>
