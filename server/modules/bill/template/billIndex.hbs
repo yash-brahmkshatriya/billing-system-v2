@@ -74,15 +74,17 @@
     }
 
     .main-table {
-      border: 1px solid black;
+      border: 0px solid black;
     }
 
     .main-table>tbody>tr {
       border-bottom: 1px solid black;
+      border-left: 1px solid black;
+      border-right: 1px solid black;
     }
 
     .main-table>thead>tr {
-      border-bottom: 1px solid black;
+      border: 1px solid black;
     }
 
     .text-center {
@@ -136,7 +138,7 @@
     }
 
     .party-dates-row.dates .dates-table td {
-      padding: 0.25rem 0.25rem;
+      padding: 0.25rem;
     }
 
 
@@ -199,7 +201,7 @@
     }
 
     .amounts-row td {
-      padding: 0.25rem 0.5rem;
+      padding: 0.5rem;
       border-right: 1px solid black;
     }
 
@@ -226,11 +228,20 @@
       border-right: none;
     }
 
+    .terms-row td.terms .term {
+      font-size: 0.8rem;
+    }
+
+    .terms-row td.terms .terms-title {
+      font-size: 0.9rem;
+      line-height: 1.2;
+    }
 
     .terms-row td.sign {
       text-align: center;
       font-weight: 600;
       font-size: 1.5rem;
+      font-weight: lighter;
     }
 
     .terms-row td.sign .sign-line-1 {
@@ -275,7 +286,7 @@
   <div class="page">
     <table class="main-table">
       <thead>
-        <tr style="display: none;">
+        <tr style="opacity: 0;">
           <th style="width: 8.3%;">C</th>
           <th style="width: 8.3%;">C</th>
           <th style="width: 8.3%;">C</th>

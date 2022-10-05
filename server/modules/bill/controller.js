@@ -19,6 +19,20 @@ class BillController {
     const templateHtml = fs.readFileSync(DC_TEMPLATE_FILE, 'utf8');
     return handlebars.compile(templateHtml);
   }
+  getBillPDFItemCellStyleValues() {
+    return {
+      charLength: 12,
+      charHeight: 12,
+      parentBoxHeight: 350,
+    };
+  }
+  getDCPDFItemCellStyleValues() {
+    return {
+      charLength: 12,
+      charHeight: 12,
+      parentBoxHeight: 480,
+    };
+  }
   async create(data, res) {
     try {
       const requiredFields = ['partyDetails', 'items'];
@@ -296,6 +310,25 @@ class BillController {
       let bill = await Bills.findById(data.params.billId)
         .populate('owner')
         .lean(true);
+
+      const billPDFItemCellStyleValues = this.getBillPDFItemCellStyleValues();
+      const expectedHeightOfItems = bill.items.reduce(
+        (acc, currItem) =>
+          acc +
+          common.expectedHeightInPDF(
+            currItem.description,
+            billPDFItemCellStyleValues.charLength,
+            billPDFItemCellStyleValues.charHeight,
+            billPDFItemCellStyleValues.parentBoxHeight
+          ),
+        0
+      );
+
+      // in px
+      const totalHeightReqd = 500;
+
+      bill.emptyRowSpacingHeight = totalHeightReqd - expectedHeightOfItems;
+
       const finalHTML = this.getBillPDFTemplate()(bill);
       fs.writeFileSync('./out/bill.html', finalHTML);
       // return res.sendFile(path.join(process.cwd(), 'out', 'bill.html'));
@@ -318,6 +351,25 @@ class BillController {
       let bill = await Bills.findById(data.params.billId)
         .populate('owner')
         .lean(true);
+
+      const dcPDFItemCellStyleValues = this.getDCPDFItemCellStyleValues();
+      const expectedHeightOfItems = bill.items.reduce(
+        (acc, currItem) =>
+          acc +
+          common.expectedHeightInPDF(
+            currItem.description,
+            dcPDFItemCellStyleValues.charLength,
+            dcPDFItemCellStyleValues.charHeight,
+            dcPDFItemCellStyleValues.parentBoxHeight
+          ),
+        0
+      );
+
+      // in px
+      const totalHeightReqd = 500;
+
+      bill.emptyRowSpacingHeight = totalHeightReqd - expectedHeightOfItems;
+
       const finalHTML = this.getDCPDFTemplate()(bill);
       fs.writeFileSync('./out/dc.html', finalHTML);
       // return res.sendFile(path.join(process.cwd(), 'out', 'bill.html'));
