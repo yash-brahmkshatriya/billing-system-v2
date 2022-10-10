@@ -31,7 +31,7 @@ const BillCard = ({ bill }) => {
       className={classNames('bill-item-card', { expanded: expanded })}
     >
       <div className='item-header'>
-        <div className='bill-number'>{bill.bill.number}</div>
+        <div className='bill-number-square'>{bill.bill.number}</div>
         <div className='d-flex justify-content-between align-items-center'>
           <div className='party-details flex-fill'>{bill.partyDetails}</div>
           <div className='d-flex flex-column align-items-end'>

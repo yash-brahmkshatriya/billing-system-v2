@@ -27,10 +27,10 @@ export function kNeighborsOfIndex(arr, index, k = 5) {
     ul = arr.length - index - 1;
   let lowerIndex, upperIndex;
   if (dl < ul) {
-    lowerIndex = Math.max(index - 2, 0);
+    lowerIndex = Math.max(index - Math.floor(k / 2), 0);
     upperIndex = Math.min(lowerIndex + k, arr.length);
   } else {
-    upperIndex = Math.min(index + 3, arr.length);
+    upperIndex = Math.min(index + Math.ceil(k / 2), arr.length);
     lowerIndex = Math.max(upperIndex - k, 0);
   }
   return arr.slice(lowerIndex, upperIndex);

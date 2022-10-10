@@ -343,14 +343,12 @@ const BillForm = ({ oldBillDetails, edit, changeEditToOff }) => {
     <div className='bill-form'>
       <div className='d-flex align-items-center justify-content-between bill-card primary mb-3'>
         <h2 className='sub-heading m-0'>{edit ? 'Edit Bill' : 'Add Bill'}</h2>
-        {edit ? (
-          <IconButton
-            Icon={XSquareFill}
-            onClick={changeEditToOff}
-            iconProps={{ className: 'icon-cta' }}
-            buttonProps={{ title: 'Cancel' }}
-          />
-        ) : null}
+        <IconButton
+          Icon={XSquareFill}
+          onClick={() => (edit ? changeEditToOff() : navigate(-1))}
+          iconProps={{ className: 'icon-cta' }}
+          buttonProps={{ title: 'Cancel' }}
+        />
       </div>
       <div className='bill-field bill-card mb-3'>
         <StandardTextarea

@@ -1,0 +1,62 @@
+@import '@/styles/variables';
+
+.pagination {
+  list-style: none;
+  $border-color: $base-hint;
+  .entries-text {
+    color: $base-border;
+  }
+  button.page-button {
+    outline: none;
+    border: none;
+    border-top: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
+    border-right: 1px solid $border-color;
+    background-color: white;
+    cursor: pointer;
+    height: 40px;
+    width: 35px;
+    &:focus {
+      outline: none;
+      background-color: rgba($color: $base-hint, $alpha: 0.5);
+    }
+    &:hover {
+      outline: none;
+      background-color: rgba($color: $base-hint, $alpha: 0.5);
+    }
+    &:disabled {
+      cursor: default;
+      &:hover {
+        background-color: white;
+      }
+      .page-text {
+        color: $base-border;
+      }
+    }
+    &.active {
+      background-color: $primary;
+      .page-text {
+        color: white;
+      }
+    }
+    &.hide-left-border {
+      border-left: none;
+    }
+    &.hide-right-border {
+      border-right: none;
+    }
+    .page-text {
+      color: $primary;
+      &.icon {
+        margin-top: -4px;
+      }
+    }
+    &:first-of-type {
+      border-left: 1px solid $border-color;
+      border-radius: $base-radius 0 0 $base-radius;
+    }
+    &:last-of-type {
+      border-radius: 0 $base-radius $base-radius 0;
+    }
+  }
+}
