@@ -64,25 +64,31 @@ billRouter.delete('/:billId', authenticate, isBillOwner, (req, res) => {
 
 billRouter.get(
   '/:billId/generateBill',
-  authenticate,
-  isBillOwner,
+  // authenticate,
+  // isBillOwner,
   (req, res) => {
     let data = {
       query: req.query,
       user: req.user,
       url: req.originalUrl,
+      params: req.params,
     };
-    res.send('Coming Soon!');
+    BillController.generateBillPDF(data, res);
   }
 );
 
-billRouter.get('/:billId/generateDC', authenticate, isBillOwner, (req, res) => {
-  let data = {
-    query: req.query,
-    user: req.user,
-    url: req.originalUrl,
-  };
-  res.send('Coming Soon!');
-});
+billRouter.get(
+  '/:billId/generateDC',
+  // authenticate, isBillOwner,
+  (req, res) => {
+    let data = {
+      query: req.query,
+      user: req.user,
+      url: req.originalUrl,
+      params: req.params,
+    };
+    BillController.generateDCPDF(data, res);
+  }
+);
 
 module.exports = billRouter;

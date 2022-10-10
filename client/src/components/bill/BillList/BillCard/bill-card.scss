@@ -24,6 +24,21 @@ li.bill-item-card {
       transform: translate(-50%, -50%);
       text-align: center;
     }
+    .bill-number-square {
+      $dims: 24px;
+      font-size: 0.9rem;
+      color: white;
+      background-color: $primary;
+      text-align: center;
+      line-height: $dims;
+      height: $dims;
+      width: $dims;
+      border-radius: $base-radius 0 $base-radius 0;
+      position: absolute;
+      display: inline-block;
+      left: 0;
+      top: 0;
+    }
     .party-details {
       white-space: pre-line;
       font-weight: bold;

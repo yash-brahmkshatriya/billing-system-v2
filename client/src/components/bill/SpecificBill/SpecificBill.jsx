@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
@@ -7,6 +7,7 @@ import {
   FileArrowDownFill,
   FileEarmarkArrowDownFill,
 } from 'react-bootstrap-icons';
+import { toast } from 'react-toastify';
 import { useBoolean, useToggle } from '@/base/hooks';
 import * as billActions from '@/redux/bill/billActions';
 import Loading from '@/base/Loading/Loading';
@@ -20,6 +21,9 @@ import {
 import './specific-bill.scss';
 import IconButton from '@/components/shared/forms/IconButton/IconButton';
 import BillForm from '../BillForm/BillForm';
+import { downloadFileAsBlob } from '@/utils/downloadFromServer';
+import BILL_URLS from '@/redux/bill/billUrls';
+import { loadingNoti } from '@/base/Notification/Notification';
 
 const BillItem = ({ item }) => (
   <li key={item._id} className='field-card item-card'>
@@ -55,6 +59,7 @@ const BillItem = ({ item }) => (
 const SpecificBill = () => {
   const dispatch = useDispatch();
   const singleBill = useSelector((state) => state.bills.singleBill);
+  const profile = useSelector((state) => state.auth.profile);
 
   const navigate = useNavigate();
   const params = useParams();
@@ -62,6 +67,34 @@ const SpecificBill = () => {
   const [loading, setLoading] = useBoolean(true);
   const [billNotFound, setBillNotFound] = useBoolean(false);
   const [edit, setEdit] = useToggle(false);
+
+  const progressToast = useRef(null);
+
+  const downloadProgressCb = useCallback(
+    (pe) => {
+      const pct = Math.floor((pe.loaded / pe.total) * 100);
+      if (progressToast.current) {
+        if (pct === 100) {
+          toast.dismiss(progressToast.current);
+          progressToast.current = null;
+        } else
+          toast.update(progressToast.current, {
+            render: `Downloading ${pct}%`,
+          });
+      } else progressToast.current = loadingNoti(`Downloading ${pct}%`);
+    },
+    [progressToast.current]
+  );
+
+  const downloadBillPDF = useCallback(() => {
+    const url = BILL_URLS.GEN_BILL_PDF.replace('{billId}', params.billId);
+    downloadFileAsBlob(url, null, `${profile?.firmName}_bill_${params.billId}`);
+  }, [params]);
+
+  const downloadDcPDF = useCallback(() => {
+    const url = BILL_URLS.GEN_DC_PDF.replace('{billId}', params.billId);
+    downloadFileAsBlob(url, null, `${profile?.firmName}_dc_${params.billId}`);
+  }, [params]);
 
   const getSpecificbill = async () => {
     try {
@@ -100,14 +133,14 @@ const SpecificBill = () => {
         </h2>
         <div className='d-flex align-items-center'>
           <IconButton
-            onClick={setEdit.toggle}
+            onClick={downloadBillPDF}
             Icon={FileArrowDownFill}
             iconProps={{ className: 'icon-cta' }}
             buttonProps={{ title: 'Download Bill' }}
             buttonClassName='me-3'
           />
           <IconButton
-            onClick={setEdit.toggle}
+            onClick={downloadDcPDF}
             Icon={FileEarmarkArrowDownFill}
             iconProps={{ className: 'icon-cta' }}
             buttonProps={{ title: 'Download DC' }}

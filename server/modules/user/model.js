@@ -45,6 +45,12 @@ const UserModel = mongoose.Schema(
     phone: {
       type: String,
     },
+    termsAndConditions: [
+      {
+        type: String,
+        default: ['E. & O.E.'],
+      },
+    ],
   },
   {
     timestamps: true,

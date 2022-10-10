@@ -43,8 +43,32 @@ function removeFromObject(object, keys) {
   return object;
 }
 
+/**
+ * @function expectedNumberOfLinesInPDF
+ * Expected Height in Pixels based on options
+ * @param {String} str String to be printed
+ * @param {Object} options Options to calculate height
+ * @returns {Number} expected height in px
+ */
+function expectedHeightInPDF(
+  str,
+  charLength = 12,
+  charHeight = 12,
+  parentBoxWidth = 350
+) {
+  // For faster calculation, assuming equal splits by "new line" character
+  const noOfLines = (str.match(/\n/gm) || []).length;
+  const charsPerChunk = str.length / noOfLines;
+  const noOfLinesPerChunk = Math.ceil(
+    (charsPerChunk * charLength) / parentBoxWidth
+  );
+  const heightOfChunk = noOfLinesPerChunk * charHeight + noOfLinesPerChunk - 1;
+  return heightOfChunk * noOfLines;
+}
+
 module.exports = {
   checkKeys,
   pickFromObject,
   removeFromObject,
+  expectedHeightInPDF,
 };

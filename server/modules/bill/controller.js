@@ -1,10 +1,38 @@
+const path = require('path');
+const fs = require('fs');
+const puppeteer = require('puppeteer');
+const handlebars = require('./hbs');
 const Bills = require('./model');
 const responses = require('../../utils/responses');
 const messages = require('../../utils/messages');
 const common = require('../../utils/common');
 const { pagination } = require('../../config');
 
+const BILL_TEMPLATE_FILE = path.join(__dirname, 'template', 'billIndex.hbs');
+const DC_TEMPLATE_FILE = path.join(__dirname, 'template', 'dcIndex.hbs');
 class BillController {
+  getBillPDFTemplate() {
+    const templateHtml = fs.readFileSync(BILL_TEMPLATE_FILE, 'utf8');
+    return handlebars.compile(templateHtml);
+  }
+  getDCPDFTemplate() {
+    const templateHtml = fs.readFileSync(DC_TEMPLATE_FILE, 'utf8');
+    return handlebars.compile(templateHtml);
+  }
+  getBillPDFItemCellStyleValues() {
+    return {
+      charLength: 12,
+      charHeight: 12,
+      parentBoxHeight: 350,
+    };
+  }
+  getDCPDFItemCellStyleValues() {
+    return {
+      charLength: 12,
+      charHeight: 12,
+      parentBoxHeight: 480,
+    };
+  }
   async create(data, res) {
     try {
       const requiredFields = ['partyDetails', 'items'];
@@ -136,8 +164,9 @@ class BillController {
       }
       let bill = await Bills.findById(data.params.billId);
       bill.partyDetails = data.body.partyDetails;
-      bill.items = data.body.items;
-
+      bill.items = data.body.items.map((item) =>
+        common.removeFromObject(item, ['_id'])
+      );
       const dateOfBill = new Date(data.body?.bill?.date) || NOW;
       const dateOfDC = new Date(data.body?.dc?.date) || NOW;
 
@@ -149,6 +178,7 @@ class BillController {
 
       bill.bill = { number: nextBillNumber.billNumber, date: dateOfBill };
       bill.dc = { number: nextBillNumber.dcNumber, date: dateOfDC };
+      bill.po = data.body.po;
 
       bill = await bill.save();
       if (bill) {
@@ -245,6 +275,116 @@ class BillController {
         };
     } catch (e) {
       throw e;
+    }
+  }
+
+  async createBufferFromHTML(htmlString) {
+    const uriHTML = encodeURIComponent(htmlString);
+
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox'],
+      headless: true,
+    });
+    const page = await browser.newPage();
+    await page.goto(`data:text/html;charset=UTF-8,${uriHTML}`, {
+      waitUntil: 'networkidle0',
+    });
+
+    const buffer = await page.pdf({
+      format: 'a4',
+      margin: {
+        top: 60,
+        bottom: 60,
+        left: 60,
+        right: 0,
+      },
+      displayHeaderFooter: false,
+    });
+
+    await browser.close();
+
+    return buffer;
+  }
+  async generateBillPDF(data, res) {
+    try {
+      let bill = await Bills.findById(data.params.billId)
+        .populate('owner')
+        .lean(true);
+
+      const billPDFItemCellStyleValues = this.getBillPDFItemCellStyleValues();
+      const expectedHeightOfItems = bill.items.reduce(
+        (acc, currItem) =>
+          acc +
+          common.expectedHeightInPDF(
+            currItem.description,
+            billPDFItemCellStyleValues.charLength,
+            billPDFItemCellStyleValues.charHeight,
+            billPDFItemCellStyleValues.parentBoxHeight
+          ),
+        0
+      );
+
+      // in px
+      const totalHeightReqd = 500;
+
+      bill.emptyRowSpacingHeight = totalHeightReqd - expectedHeightOfItems;
+
+      const finalHTML = this.getBillPDFTemplate()(bill);
+      fs.writeFileSync('./out/bill.html', finalHTML);
+      // return res.sendFile(path.join(process.cwd(), 'out', 'bill.html'));
+
+      const billPDFBuffer = await this.createBufferFromHTML(finalHTML);
+
+      res.writeHead(200, {
+        'Content-Type': 'application/pdf',
+        // 'Content-disposition': 'attachment; filename=' + data.params.billId,
+        'Content-Length': billPDFBuffer.length,
+      });
+      return res.end(billPDFBuffer);
+    } catch (err) {
+      console.error(err);
+      return responses.sendServerError(res, data.url);
+    }
+  }
+  async generateDCPDF(data, res) {
+    try {
+      let bill = await Bills.findById(data.params.billId)
+        .populate('owner')
+        .lean(true);
+
+      const dcPDFItemCellStyleValues = this.getDCPDFItemCellStyleValues();
+      const expectedHeightOfItems = bill.items.reduce(
+        (acc, currItem) =>
+          acc +
+          common.expectedHeightInPDF(
+            currItem.description,
+            dcPDFItemCellStyleValues.charLength,
+            dcPDFItemCellStyleValues.charHeight,
+            dcPDFItemCellStyleValues.parentBoxHeight
+          ),
+        0
+      );
+
+      // in px
+      const totalHeightReqd = 500;
+
+      bill.emptyRowSpacingHeight = totalHeightReqd - expectedHeightOfItems;
+
+      const finalHTML = this.getDCPDFTemplate()(bill);
+      fs.writeFileSync('./out/dc.html', finalHTML);
+      // return res.sendFile(path.join(process.cwd(), 'out', 'bill.html'));
+
+      const dcPDFBuffer = await this.createBufferFromHTML(finalHTML);
+
+      res.writeHead(200, {
+        'Content-Type': 'application/pdf',
+        // 'Content-disposition': 'attachment; filename=' + data.params.billId,
+        'Content-Length': dcPDFBuffer.length,
+      });
+      return res.end(dcPDFBuffer);
+    } catch (err) {
+      console.error(err);
+      return responses.sendServerError(res, data.url);
     }
   }
 }

@@ -1,7 +1,7 @@
-const auth = require("../utils/encryption");
-const User = require("../modules/user/model");
-const messages = require("../utils/messages")["common"];
-const response = require("../utils/responses");
+const auth = require('../utils/encryption');
+const User = require('../modules/user/model');
+const messages = require('../utils/messages')['common'];
+const response = require('../utils/responses');
 
 const authenticate = async (req, res, next) => {
   let token =
@@ -23,7 +23,11 @@ const authenticate = async (req, res, next) => {
       return response.sendServerError(res, err);
     }
   }
-  return response.sendUnauthorized(res, messages.unauthorized_login);
+  return response.sendUnauthorized(
+    res,
+    req.originalUrl,
+    messages.unauthorized_login
+  );
 };
 
 module.exports = authenticate;

@@ -1,0 +1,21 @@
+<td class="terms" colspan="7">
+  <strong class="terms-title">Terms & Conditions:</strong>
+  {{#each owner.termsAndConditions}}
+  <div class="term">
+    ({{add @index 1}}) {{this}}
+  </div>
+  {{/each}}
+</td>
+
+<td colspan="5" class="sign">
+  <div class="sign-line-1">
+    <i>For, </i> <span class="sign-firm-name">{{owner.firmName}}</span>
+  </div>
+
+  <div>
+    <i>
+      Authorised Signatory
+    </i>
+  </div>
+
+</td>

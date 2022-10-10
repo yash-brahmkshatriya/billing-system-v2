@@ -1,0 +1,23 @@
+<tr class="items-row items-row-head">
+  <th colspan="1" class="sr-no-head">Sr.No.</th>
+  <th colspan="6" class="description-head">Description</th>
+  <th colspan="1" class="qty-head">Qty</th>
+  <th colspan="2" class="rate-head">Rate (Rs.)</th>
+  <th colspan="2" class="amount-head">Amount (Rs.)</th>
+</tr>
+{{#each this.items}}
+<tr class="items-row items-row-body">
+  <td colspan="1" class="sr-no">{{add @index 1}}</td>
+  <td colspan="6" class="description">{{description}}</td>
+  <td colspan="1" class="qty">{{quantity}} {{unit}}</td>
+  <td colspan="2" class="rate">{{rate}} per {{qtyPerUnit}} {{unit}}</td>
+  <td colspan="2" class="amount">{{toFixed amount 2}}</td>
+</tr>
+{{/each}}
+<tr class="items-row items-row-body" style="height: {{emptyRowSpacingHeight}}px;">
+  <td colspan="1"></td>
+  <td colspan="6"></td>
+  <td colspan="1"></td>
+  <td colspan="2"></td>
+  <td colspan="2"></td>
+</tr>

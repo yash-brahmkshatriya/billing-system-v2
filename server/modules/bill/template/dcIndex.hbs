@@ -1,0 +1,328 @@
+<html lang='en'>
+
+<head>
+  <meta charset='UTF-8' />
+  <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+  <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+  <title>Document</title>
+  {{!--
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css'
+    integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm' crossorigin='anonymous' /> --}}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bungee&family=Fredoka+One&family=Peralta&family=Righteous&family=Open+Sans&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --base-primary: #0d21a1;
+      --base-success: #0ca75f;
+      --base-danger: #f23e3e;
+      --base-primary-dark: #011638;
+      --base-dark: #141414;
+      --base-secondary: #eec643;
+      --base-background: #eef0f2;
+
+      --page-padding: 2.5rem;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-size: 12px;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    html {
+      -webkit-print-color-adjust: exact;
+    }
+
+    body {
+      background-color: white;
+      color: black;
+      font-family: "Open Sans", Helvetica, sans-serif !important;
+      font-style: normal;
+    }
+
+    table {
+      page-break-inside: auto !important;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    tr {
+      page-break-inside: avoid !important;
+      page-break-after: auto !important;
+    }
+
+    thead {
+      display: table-header-group !important;
+    }
+
+    tfoot {
+      display: table-footer-group !important;
+    }
+
+    .main-table {
+      border: 0px solid black;
+    }
+
+    .main-table>tbody>tr {
+      border-bottom: 1px solid black;
+      border-left: 1px solid black;
+      border-right: 1px solid black;
+    }
+
+    .main-table>thead>tr {
+      border: 1px solid black;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .firm-name {
+      text-align: center;
+      font-family: 'Peralta', sans-serif;
+      font-size: 3rem;
+      padding: 0.5rem;
+    }
+
+    .address-contact-row {
+      padding: 0.25rem;
+      font-size: 1.25rem;
+      text-align: center;
+    }
+
+    .address-contact-row.address {
+      border-right: 1px solid black;
+    }
+
+    .address-contact-row.phone {
+      font-weight: bold;
+    }
+
+    .bill-type {
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 2rem;
+      letter-spacing: 3px;
+      padding: 0.25rem;
+    }
+
+    .party-dates-row {
+      padding: 0.5rem;
+    }
+
+    .party-dates-row.party-details {
+      border-right: 1px solid black;
+      vertical-align: top;
+    }
+
+    .party-dates-row.party-details .party-details-text {
+      white-space: pre-line;
+    }
+
+    .party-dates-row.dates .dates-table {
+      margin-left: 25px;
+    }
+
+    .party-dates-row.dates .dates-table td {
+      padding: 0.25rem;
+    }
+
+
+
+    .items-row td,
+    .items-row th {
+      padding: 0.5rem 0.25rem;
+    }
+
+    .items-row.items-row-head {
+      background-color: #2e2e2e;
+      color: white;
+    }
+
+    .items-row.items-row-head>th {
+      border-right: 1px solid white !important;
+      -webkit-print-color-adjust: exact;
+    }
+
+    .items-row.items-row-head>th:last-of-type {
+      border-right: none !important;
+    }
+
+    .items-row.items-row-body {
+      border-bottom: 1px solid black;
+    }
+
+    .items-row.items-row-body>td {
+      border-right: 1px solid black;
+    }
+
+    .items-row.items-row-body>td:last-of-type {
+      border-right: none;
+    }
+
+    .items-row.items-row-body .sr-no,
+    .items-row.items-row-body .qty,
+    .items-row.items-row-body .rate {
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .items-row.items-row-body .amount {
+      text-align: end;
+      vertical-align: middle;
+    }
+
+    .items-row.items-row-body .description {
+      white-space: pre-line;
+      padding-left: 0.5rem;
+    }
+
+
+    .amounts-row {
+      border-bottom: 1px solid black;
+    }
+
+    .amounts-row:last-of-type {
+      border-bottom: none;
+    }
+
+    .amounts-row td {
+      padding: 0.5rem;
+      border-right: 1px solid black;
+    }
+
+    .amounts-row td:last-of-type {
+      border-right: none;
+    }
+
+    .amounts-row .amount-head {
+      font-weight: bold;
+      text-align: end;
+    }
+
+    .amounts-row .amount {
+      text-align: end;
+      font-weight: bold;
+    }
+
+    .terms-row td {
+      padding: 0.5rem 0.5rem;
+      border-right: 1px solid black;
+    }
+
+    .terms-row td:last-of-type {
+      border-right: none;
+    }
+
+    .terms-row td.terms .term {
+      font-size: 0.8rem;
+    }
+
+    .terms-row td.terms .terms-title {
+      font-size: 0.9rem;
+      line-height: 1.2;
+    }
+
+    .terms-row td.sign {
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.5rem;
+      font-weight: lighter;
+    }
+
+    .terms-row td.sign .sign-line-1 {
+      margin-bottom: 4rem;
+    }
+
+    .terms-row td.sign .sign-firm-name {
+      font-family: "Peralta", sans-serif;
+      font-weight: normal;
+    }
+
+    .page {
+      padding: var(--page-padding);
+      padding-top: 0;
+      position: relative;
+      -webkit-print-color-adjust: exact;
+    }
+
+    @page {
+      size: A4 potrait;
+      margin-top: 60px;
+      margin-bottom: 60px;
+      margin-left: 60px;
+      margin-right: 0px;
+    }
+
+    @media print {
+      table {
+        border-width: 1px !important;
+      }
+
+      td,
+      th {
+        border-width: 0px 0.5px 0px 0px !important;
+        border-right-color: black !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <table class="main-table">
+      <thead>
+        <tr style="opacity: 0;">
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.3%;">C</th>
+          <th style="width: 8.7%;">C</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          {{> firmName this }}
+        </tr>
+        <tr>
+          {{> addressContact this}}
+        </tr>
+        <tr class="text-center">
+          <td class="bill-type" colspan="12">DC</td>
+        </tr>
+        <tr>
+          {{> partyAndDates this}}
+        </tr>
+
+        {{> itemsDc this }}
+
+        <tr class="terms-row">
+          {{> termsSign this}}
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+
+</html>
