@@ -341,7 +341,7 @@ class BillController {
       bill.emptyRowSpacingHeight = totalHeightReqd - expectedHeightOfItems;
 
       const finalHTML = this.getBillPDFTemplate()(bill);
-      fs.writeFileSync('./out/bill.html', finalHTML);
+      // fs.writeFileSync('./out/bill.html', finalHTML);
       // return res.sendFile(path.join(process.cwd(), 'out', 'bill.html'));
 
       const billPDFBuffer = await this.createBufferFromHTML(finalHTML);
@@ -382,7 +382,7 @@ class BillController {
       bill.emptyRowSpacingHeight = totalHeightReqd - expectedHeightOfItems;
 
       const finalHTML = this.getDCPDFTemplate()(bill);
-      fs.writeFileSync('./out/dc.html', finalHTML);
+      // fs.writeFileSync('./out/dc.html', finalHTML);
       // return res.sendFile(path.join(process.cwd(), 'out', 'bill.html'));
 
       const dcPDFBuffer = await this.createBufferFromHTML(finalHTML);
