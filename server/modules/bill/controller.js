@@ -95,6 +95,17 @@ class BillController {
       delete data.query.limit;
       delete data.query.sortBy;
 
+      if (data.query.search) {
+        // const searchRegex = new RegExp(`^.*${data.query.search}.*$`, 'im');
+        const searchRegex = new RegExp(data.query.search, 'im');
+        data.query['$or'] = [
+          { partyDetails: searchRegex },
+          { 'po.number': searchRegex },
+          { 'items.description': searchRegex },
+        ];
+        delete data.query.search;
+      }
+
       data.query.isCancelled = { $ne: true };
       data.query.owner = data.user._id;
 

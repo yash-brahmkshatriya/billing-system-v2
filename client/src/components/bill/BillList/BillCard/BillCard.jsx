@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   BoxArrowUpRight,
   ChevronExpand,
@@ -43,17 +43,15 @@ const BillCard = ({ bill }) => {
             </div>
           </div>
           <div className='d-flex flex-column justify-content-around align-items-center ms-3'>
-            <IconButton
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                navigate(SINGLE_BILL.replace(':billId', bill._id));
-              }}
-              Icon={BoxArrowUpRight}
-              buttonClassName='mb-2'
-              iconProps={{ className: 'bill-card-cta' }}
-              buttonProps={{ title: 'Go to Bill' }}
-            />
+            <Link to={SINGLE_BILL.replace(':billId', bill._id)}>
+              <IconButton
+                onClick={() => null}
+                Icon={BoxArrowUpRight}
+                buttonClassName='mb-2'
+                iconProps={{ className: 'bill-card-cta' }}
+                buttonProps={{ title: 'Go to Bill' }}
+              />
+            </Link>
             <IconButton
               onClick={(e) => {
                 setExpanded.toggle();
