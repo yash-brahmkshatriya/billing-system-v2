@@ -1,4 +1,4 @@
 {
   "version": 2,
-  "redirects": [{ "source": "/(.*)", "destination": "/dist/index.html" }]
+  "redirects": [{ "source": "/(.*)", "destination": "/" }]
 }
