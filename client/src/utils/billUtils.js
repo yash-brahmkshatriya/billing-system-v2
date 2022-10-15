@@ -14,3 +14,17 @@ export function getCurrentFinancialYear(dateString = null) {
 
   return { financialBeginYear, financialEndYear: financialBeginYear + 1 };
 }
+
+export function getCurrentFinancialYearDates(dateString = null) {
+  let date = dateString ? new Date(dateString) : new Date();
+
+  let financialBeginYear =
+    date.getMonth() < 3 ? date.getFullYear() - 1 : date.getFullYear();
+
+  let financialYearStartDate = new Date(`04/01/${financialBeginYear} 00:00:00`);
+  let financialYearEndDate = new Date(
+    `03/31/${financialBeginYear + 1} 23:59:59`
+  );
+
+  return { start: financialYearStartDate, end: financialYearEndDate };
+}

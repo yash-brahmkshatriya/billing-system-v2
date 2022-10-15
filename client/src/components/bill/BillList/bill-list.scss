@@ -1,4 +1,7 @@
 @import '@/styles/variables';
+@import '../../../../node_modules/bootstrap/scss/functions';
+@import '../../../../node_modules/bootstrap/scss/variables';
+@import '../../../../node_modules/bootstrap/scss/mixins';
 
 .bill-list {
   list-style: none;
@@ -7,5 +10,33 @@
   li {
     margin: 0;
     margin-bottom: 1rem;
+  }
+}
+.bill-filters {
+  background-color: white;
+  padding: 1.25rem 1.5rem;
+  border-radius: $base-radius;
+  input[type='date'] {
+    cursor: pointer;
+    &:disabled {
+      cursor: default;
+      &::-webkit-calendar-picker-indicator {
+        cursor: default;
+      }
+    }
+    &::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+    }
+  }
+  .bill-filters-container {
+    max-width: 900px;
+  }
+  .clear-filters-btn {
+    margin-top: 2rem;
+  }
+  @include media-breakpoint-down('lg') {
+    .clear-filters-btn {
+      margin-top: 0;
+    }
   }
 }
