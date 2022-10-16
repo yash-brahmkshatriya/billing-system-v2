@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 /**
  * @function checkKeys
  * Check Keys
@@ -66,9 +69,23 @@ function expectedHeightInPDF(
   return heightOfChunk * noOfLines;
 }
 
+function walkThroughDir(dirPath) {
+  let files = [];
+  const list = fs.readdirSync(dirPath);
+  list.forEach((file) => {
+    let filePath = path.join(dirPath, file);
+    const stat = fs.statSync(filePath);
+    if (stat && stat.isDirectory()) {
+      files = [...files, ...walkThroughDir(filePath)];
+    } else files.push(filePath);
+  });
+  return files;
+}
+
 module.exports = {
   checkKeys,
   pickFromObject,
   removeFromObject,
   expectedHeightInPDF,
+  walkThroughDir,
 };

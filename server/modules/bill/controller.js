@@ -318,6 +318,16 @@ class BillController {
   }
   async generateBillPDF(data, res) {
     try {
+      console.log(
+        common.walkThroughDir(
+          path.join(
+            process.cwd(),
+            'node_modules',
+            'puppeteer',
+            '.local-chromium'
+          )
+        )
+      );
       let bill = await Bills.findById(data.params.billId)
         .populate('owner')
         .lean(true);
