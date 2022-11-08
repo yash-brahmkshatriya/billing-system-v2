@@ -28,3 +28,12 @@ export async function downloadFileAsBlob(url, callback, name = null) {
   downloadFile(blobUrl, name);
   window.URL.revokeObjectURL(blobUrl);
 }
+export async function openHtmlAsDataUri(uri, name = null) {
+  const response = await instance.get(uri);
+  var wnd = window.open('about:blank', '_blank');
+  wnd.document.write(response.data);
+  wnd.requestIdleCallback(function () {
+    wnd.focus();
+    wnd.print();
+  });
+}

@@ -318,16 +318,6 @@ class BillController {
   }
   async generateBillPDF(data, res) {
     try {
-      console.log(
-        common.walkThroughDir(
-          path.join(
-            process.cwd(),
-            'node_modules',
-            'puppeteer',
-            '.local-chromium'
-          )
-        )
-      );
       let bill = await Bills.findById(data.params.billId)
         .populate('owner')
         .lean(true);
@@ -354,17 +344,23 @@ class BillController {
       // fs.writeFileSync('./out/bill.html', finalHTML);
       // return res.sendFile(path.join(process.cwd(), 'out', 'bill.html'));
 
-      const billPDFBuffer = await this.createBufferFromHTML(finalHTML);
+      const sendHTMLString = data.query?.asString ?? false;
+      if (sendHTMLString) {
+        return res.status(200).send(finalHTML);
+      } else {
+        const billPDFBuffer = await this.createBufferFromHTML(finalHTML);
 
-      res.writeHead(200, {
-        'Content-Type': 'application/pdf',
-        // 'Content-disposition': 'attachment; filename=' + data.params.billId,
-        'Content-Length': billPDFBuffer.length,
-      });
-      return res.end(billPDFBuffer);
+        res.writeHead(200, {
+          'Content-Type': 'application/pdf',
+          'Content-disposition':
+            'attachment; filename=bill_' + data.params.billId,
+          'Content-Length': billPDFBuffer.length,
+        });
+        return res.end(billPDFBuffer);
+      }
     } catch (err) {
       console.error(err);
-      return responses.sendServerError(res, data.url);
+      return responses.sendServerError(res, data.url, JSON.stringify(err));
     }
   }
   async generateDCPDF(data, res) {
@@ -395,14 +391,20 @@ class BillController {
       // fs.writeFileSync('./out/dc.html', finalHTML);
       // return res.sendFile(path.join(process.cwd(), 'out', 'bill.html'));
 
-      const dcPDFBuffer = await this.createBufferFromHTML(finalHTML);
+      const sendHTMLString = data.query.asString ?? false;
+      if (sendHTMLString) {
+        return res.status(200).send(finalHTML);
+      } else {
+        const dcPDFBuffer = await this.createBufferFromHTML(finalHTML);
 
-      res.writeHead(200, {
-        'Content-Type': 'application/pdf',
-        // 'Content-disposition': 'attachment; filename=' + data.params.billId,
-        'Content-Length': dcPDFBuffer.length,
-      });
-      return res.end(dcPDFBuffer);
+        res.writeHead(200, {
+          'Content-Type': 'application/pdf',
+          'Content-disposition':
+            'attachment; filename=dc_' + data.params.billId,
+          'Content-Length': dcPDFBuffer.length,
+        });
+        return res.end(dcPDFBuffer);
+      }
     } catch (err) {
       console.error(err);
       return responses.sendServerError(res, data.url);

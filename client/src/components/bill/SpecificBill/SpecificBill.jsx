@@ -21,7 +21,10 @@ import {
 import './specific-bill.scss';
 import IconButton from '@/components/shared/forms/IconButton/IconButton';
 import BillForm from '../BillForm/BillForm';
-import { downloadFileAsBlob } from '@/utils/downloadFromServer';
+import {
+  downloadFileAsBlob,
+  openHtmlAsDataUri,
+} from '@/utils/downloadFromServer';
 import BILL_URLS from '@/redux/bill/billUrls';
 import { loadingNoti } from '@/base/Notification/Notification';
 
@@ -89,6 +92,7 @@ const SpecificBill = () => {
   const downloadBillPDF = useCallback(() => {
     const url = BILL_URLS.GEN_BILL_PDF.replace('{billId}', params.billId);
     downloadFileAsBlob(url, null, `${profile?.firmName}_bill_${params.billId}`);
+    // openHtmlAsDataUri(url, `${profile?.firmName}_bill_${params.billId}`);
   }, [params]);
 
   const downloadDcPDF = useCallback(() => {
