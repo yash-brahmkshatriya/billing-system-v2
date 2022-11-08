@@ -90,9 +90,10 @@ const SpecificBill = () => {
   );
 
   const downloadBillPDF = useCallback(() => {
-    const url = BILL_URLS.GEN_BILL_PDF.replace('{billId}', params.billId);
-    downloadFileAsBlob(url, null, `${profile?.firmName}_bill_${params.billId}`);
-    // openHtmlAsDataUri(url, `${profile?.firmName}_bill_${params.billId}`);
+    let url = BILL_URLS.GEN_BILL_PDF.replace('{billId}', params.billId);
+    url = `${url}?asString=true`;
+    // downloadFileAsBlob(url, null, `${profile?.firmName}_bill_${params.billId}`);
+    openHtmlAsDataUri(url, `${profile?.firmName}_bill_${params.billId}`);
   }, [params]);
 
   const downloadDcPDF = useCallback(() => {

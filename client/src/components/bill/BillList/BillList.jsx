@@ -40,7 +40,7 @@ const BillList = () => {
   // state hooks
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useBoolean(true);
-  const [showFilters, setShowFilters] = useToggle(true);
+  const [showFilters, setShowFilters] = useToggle(false);
 
   const [search, setSearch] = useState('');
   const [startDate, setStartDate] = useState(currentFinancialYearDates.start);
