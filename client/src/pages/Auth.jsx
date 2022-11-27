@@ -16,7 +16,7 @@ const Auth = () => {
       <div className='row h-100'>
         <div className='col-12 col-md-6 col-lg-5'>
           <div className='row my-auto h-100'>
-            <div className='col-12 col-md-8 offset-md-2 my-md-auto'>
+            <div className='px-5 px-md-3 col-12 col-md-8 offset-md-2 my-auto'>
               <Routes>
                 <Route index element={<GetEmail />} />
                 <Route path={RELATIVE_LOGIN} element={<Login />} />

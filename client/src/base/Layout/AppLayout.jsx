@@ -21,12 +21,13 @@ const AppLayout = ({ children }) => {
             Icon={List}
             iconProps={{ color: colors.primary }}
             onClick={toggleSidebar.toggle}
+            buttonProps={{ fontSize: '1.5rem' }}
           />
           <Link to={DASHBOARD} className='flex-fill text-center'>
             <img src='/assets/images/logo.png' alt='logo' height='50px' />
           </Link>
         </header>
-        <div className='p-2 p-md-3 p-lg-4'>{children}</div>
+        <div className='p-3 p-lg-4'>{children}</div>
       </div>
     </div>
   );

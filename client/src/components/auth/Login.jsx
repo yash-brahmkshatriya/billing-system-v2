@@ -43,6 +43,7 @@ function Login() {
     try {
       setBtnDisabled.on();
       let loggedIn = await dispatch(authActions.login(data));
+      dispatch(authActions.me());
       if (loggedIn) navigate(DASHBOARD);
     } catch (e) {
       console.error(e);
