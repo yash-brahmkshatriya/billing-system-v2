@@ -59,7 +59,14 @@ const BillItem = ({ item }) => (
   </li>
 );
 
-const useHtmlStringForPDFs = Boolean(import.meta.env.VITE_USE_STRING_FOR_PDF);
+const envUseStringForPDF = import.meta.env.VITE_USE_STRING_FOR_PDF;
+const useHtmlStringForPDFs = !(
+  envUseStringForPDF === undefined ||
+  envUseStringForPDF === null ||
+  envUseStringForPDF === '0' ||
+  envUseStringForPDF === 'false' ||
+  envUseStringForPDF === 'no'
+);
 
 const SpecificBill = () => {
   const dispatch = useDispatch();

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   ProSidebar,
   Menu,
@@ -7,17 +8,32 @@ import {
   SidebarContent,
 } from 'react-pro-sidebar';
 import 'react-pro-sidebar/dist/css/styles.css';
-import { Link, matchPath, useLocation } from 'react-router-dom';
-import { BILLS, DASHBOARD, NEW_BILL, SINGLE_BILL } from '@/data/routeUrls';
+import { Link, matchPath, useLocation, useNavigate } from 'react-router-dom';
+import {
+  BILLS,
+  DASHBOARD,
+  NEW_BILL,
+  SINGLE_BILL,
+  AUTH,
+} from '@/data/routeUrls';
+import * as authActions from '@/redux/auth/authActions';
 import './sidebar.scss';
+import StandardButton from '../forms/StandardButton/StandardButton';
 
 const Sidebar = ({ sidebarVisible, toggleSidebar }) => {
+  const dispatch = useDispatch();
+
   const location = useLocation();
-  const BILLS_MATCH =
-    matchPath(BILLS, location.pathname) ??
-    matchPath(NEW_BILL, location.pathname) ??
-    matchPath(SINGLE_BILL, location.pathname) ??
-    false;
+  const navigate = useNavigate();
+
+  const BILLS_MATCH = useMemo(() => {
+    return (
+      matchPath(BILLS, location.pathname) ??
+      matchPath(NEW_BILL, location.pathname) ??
+      matchPath(SINGLE_BILL, location.pathname) ??
+      false
+    );
+  }, [BILLS, NEW_BILL, SINGLE_BILL, location.pathname]);
   return (
     <ProSidebar
       breakPoint='md'
@@ -38,6 +54,15 @@ const Sidebar = ({ sidebarVisible, toggleSidebar }) => {
             <Link to={BILLS}>Bills</Link>
           </MenuItem>
         </Menu>
+        <StandardButton
+          text='Logout'
+          color='btn-primary'
+          onClick={() => {
+            dispatch(authActions.logout());
+            navigate(AUTH);
+          }}
+          className='logout-btn'
+        />
       </SidebarContent>
     </ProSidebar>
   );
