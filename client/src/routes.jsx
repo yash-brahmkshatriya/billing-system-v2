@@ -16,8 +16,14 @@ function AppRoutes() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   useEffect(async () => {
-    await dispatch(authActions.me());
-    setLoading(false);
+    setLoading(true);
+    try {
+      await dispatch(authActions.me());
+    } catch (err) {
+      dispatch(authActions.logout());
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   if (loading) return <Loading />;

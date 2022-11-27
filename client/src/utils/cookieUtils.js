@@ -20,5 +20,5 @@ export function setCookie(cname, cvalue, exdays = 30) {
   document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
 }
 export function clearCookie(cname) {
-  CookieUtils.setCookie(cname, '', -1);
+  setCookie(cname, '', -1);
 }

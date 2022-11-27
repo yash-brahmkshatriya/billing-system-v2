@@ -59,6 +59,8 @@ const BillItem = ({ item }) => (
   </li>
 );
 
+const useHtmlStringForPDFs = Boolean(import.meta.env.VITE_USE_STRING_FOR_PDF);
+
 const SpecificBill = () => {
   const dispatch = useDispatch();
   const singleBill = useSelector((state) => state.bills.singleBill);
@@ -91,14 +93,26 @@ const SpecificBill = () => {
 
   const downloadBillPDF = useCallback(() => {
     let url = BILL_URLS.GEN_BILL_PDF.replace('{billId}', params.billId);
-    url = `${url}?asString=true`;
-    // downloadFileAsBlob(url, null, `${profile?.firmName}_bill_${params.billId}`);
-    openHtmlAsDataUri(url, `${profile?.firmName}_bill_${params.billId}`);
+    if (useHtmlStringForPDFs) {
+      url = `${url}?asString=true`;
+      openHtmlAsDataUri(url, `${profile?.firmName}_bill_${params.billId}`);
+    } else {
+      downloadFileAsBlob(
+        url,
+        null,
+        `${profile?.firmName}_bill_${params.billId}`
+      );
+    }
   }, [params]);
 
   const downloadDcPDF = useCallback(() => {
-    const url = BILL_URLS.GEN_DC_PDF.replace('{billId}', params.billId);
-    downloadFileAsBlob(url, null, `${profile?.firmName}_dc_${params.billId}`);
+    let url = BILL_URLS.GEN_DC_PDF.replace('{billId}', params.billId);
+    if (useHtmlStringForPDFs) {
+      url = `${url}?asString=true`;
+      openHtmlAsDataUri(url, `${profile?.firmName}_dc_${params.billId}`);
+    } else {
+      downloadFileAsBlob(url, null, `${profile?.firmName}_dc_${params.billId}`);
+    }
   }, [params]);
 
   const getSpecificbill = async () => {

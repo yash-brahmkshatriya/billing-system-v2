@@ -63,14 +63,9 @@ export const signup = (data) => (dispatch) => {
 
 export const me = () => (dispatch) => {
   let url = AUTH_URLS.ME;
-  return instance
-    .get(url)
-    .then((response) => {
-      dispatch(actions.setProfile({ profile: response.data.data }));
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+  return instance.get(url).then((response) => {
+    dispatch(actions.setProfile({ profile: response.data.data }));
+  });
 };
 
 export const updateProfile = (userId, data) => (dispatch) => {
@@ -82,4 +77,8 @@ export const updateProfile = (userId, data) => (dispatch) => {
       let errMsg = getErrorMessage(err);
       errorNoti(errMsg);
     });
+};
+
+export const logout = () => (dispatch) => {
+  return dispatch(actions.logout());
 };
