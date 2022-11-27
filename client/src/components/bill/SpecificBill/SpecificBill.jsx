@@ -223,7 +223,7 @@ const SpecificBill = () => {
         <div className='field-value'>{singleBill.partyDetails}</div>
       </div>
       <div className='field-card mb-3'>
-        <div className='row'>
+        <div className='row gy-2'>
           <div className='col-12 col-md-4'>
             <div className='row'>
               <div className='col'>
