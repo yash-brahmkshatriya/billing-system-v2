@@ -164,46 +164,59 @@ const SpecificBill = () => {
     );
   return (
     <div className='specific-bill'>
-      <div className='d-flex justify-content-between align-items-center field-card primary mb-3'>
-        <h2 className='sub-heading fw-normal m-0'>
-          Bill No. {singleBill.bill.number}
-        </h2>
-        <h2 className='sub-heading fw-normal m-0'>
-          Financial year:{' '}
-          {getCurrentFinancialYear(singleBill.bill.date).financialBeginYear} -
-          {getCurrentFinancialYear(singleBill.bill.date).financialEndYear}
-        </h2>
+      <div className='field-card primary mb-3'>
+        <div className='row g-2'>
+          <h2 className='sub-heading fw-normal m-0 col-12 col-sm-6'>
+            Bill No. {singleBill.bill.number}
+          </h2>
+          <h2 className='sub-heading fw-normal m-0 col-12 col-sm-6 mt-2 mt-sm-0'>
+            {`Financial year: ${
+              getCurrentFinancialYear(singleBill.bill.date).financialBeginYear
+            } - ${
+              getCurrentFinancialYear(singleBill.bill.date).financialEndYear
+            }`}
+          </h2>
+        </div>
       </div>
-      <div className='d-flex justify-content-around align-items-center field-card primary mb-3'>
-        <StandardButton
-          onClick={downloadBillPDF}
-          className='me-3 cta'
-          iconClassName='icon'
-          icon={<FileArrowDownFill />}
-          text='Download Bill'
-        />
-
-        <StandardButton
-          onClick={downloadDcPDF}
-          className='me-3 cta'
-          iconClassName='icon'
-          icon={<FileEarmarkArrowDownFill />}
-          text='Download DC'
-        />
-        <StandardButton
-          onClick={forkBill}
-          className='me-3 cta'
-          iconClassName='icon'
-          icon={<GitIcon />}
-          text='Fork Bill'
-        />
-        <StandardButton
-          onClick={setEdit.toggle}
-          className='me-3 cta'
-          iconClassName='icon'
-          icon={<PencilSquare />}
-          text='Edit Bill'
-        />
+      <div className='field-card primary mb-3'>
+        <div className='row g-3'>
+          <div className='col-6 col-md-3 text-center'>
+            <StandardButton
+              onClick={downloadBillPDF}
+              className='cta'
+              iconClassName='icon'
+              icon={<FileArrowDownFill />}
+              text='Download Bill'
+            />
+          </div>
+          <div className='col-6 col-md-3 text-center'>
+            <StandardButton
+              onClick={downloadDcPDF}
+              className='cta'
+              iconClassName='icon'
+              icon={<FileEarmarkArrowDownFill />}
+              text='Download DC'
+            />
+          </div>
+          <div className='col-6 col-md-3 text-center'>
+            <StandardButton
+              onClick={forkBill}
+              className='cta'
+              iconClassName='icon'
+              icon={<GitIcon />}
+              text='Fork Bill'
+            />
+          </div>
+          <div className='col-6 col-md-3 text-center'>
+            <StandardButton
+              onClick={setEdit.toggle}
+              className='cta'
+              iconClassName='icon'
+              icon={<PencilSquare />}
+              text='Edit Bill'
+            />
+          </div>
+        </div>
       </div>
       <div className='field-card mb-3 party-details'>
         <div className='field-label'>Party Details</div>
