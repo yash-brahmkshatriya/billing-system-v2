@@ -21,7 +21,9 @@ const AppLayout = ({ children }) => {
             Icon={List}
             iconProps={{ color: colors.primary }}
             onClick={toggleSidebar.toggle}
-            buttonProps={{ fontSize: '1.5rem' }}
+            buttonProps={{
+              style: { fontSize: '2rem', position: 'relative', left: '10px' },
+            }}
           />
           <Link to={DASHBOARD} className='flex-fill text-center'>
             <img src='/assets/images/logo.png' alt='logo' height='50px' />
