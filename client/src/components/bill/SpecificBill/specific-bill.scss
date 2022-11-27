@@ -1,10 +1,17 @@
 @import '@/styles/variables';
 
 .specific-bill {
-  .icon-cta {
-    fill: #dddddd;
+  .cta {
+    padding: 0;
+    color: #dddddd;
+    .icon {
+      fill: #dddddd;
+    }
     &:hover {
-      fill: white;
+      color: white;
+      .icon {
+        fill: white;
+      }
     }
   }
   .field-card {

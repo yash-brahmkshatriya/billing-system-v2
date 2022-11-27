@@ -31,6 +31,11 @@ export const getSpecificBill = (billId) => (dispatch) => {
     });
 };
 
+export const getForkedBillDetails = (billId) => {
+  let url = BILL_URLS.SPECIFIC_BILL.replace('{billId}', billId);
+  return instance.get(url);
+};
+
 export const getNextBillDetails = (date, billId) => (dispatch) => {
   let url = BILL_URLS.NEXT_BILL_DETAILS;
   let filters = { date };

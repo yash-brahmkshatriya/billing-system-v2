@@ -1,5 +1,6 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { TrashFill, XSquareFill } from 'react-bootstrap-icons';
 import { nanoid } from 'nanoid';
 import dayjs from 'dayjs';
@@ -17,10 +18,11 @@ import { BillValidation } from '@/validations/BillValidation';
 import validationFunctions from '@/utils/validationUtils';
 
 import './bill-form.scss';
-import { useNavigate, useParams } from 'react-router-dom';
 import { BILLS } from '@/data/routeUrls';
-import { removeFromObject } from '@/utils/generalUtils';
+import { FORK_BILLID_KEY } from '@/data/enums/misc';
+import { getErrorMessage, removeFromObject } from '@/utils/generalUtils';
 import { calculateAmountOfItem, calculateGrandTotal } from '@/utils/billUtils';
+import { errorNoti } from '@/base/Notification/Notification';
 
 const INITIAL_ITEM = {
   description: '',
@@ -79,6 +81,7 @@ const FORM_ACTIONS = Object.freeze({
   ADD_ITEM: 'ADD_ITEM',
   UPDATE_ITEM: 'UPDATE_ITEM',
   REMOVE_ITEM: 'REMOVE_ITEM',
+  FORK_BILL: 'FORK_BILL',
   // DISCOUNT_PERCENTAGE: 'DISCOUNT_PERCENTAGE',
 });
 
@@ -128,6 +131,8 @@ function billFormReducer(state, action) {
           ...state.items.slice(index + 1),
         ],
       };
+    case FORM_ACTIONS.FORK_BILL:
+      return { ...state, ...action.payload };
 
     default:
       return state;
@@ -278,6 +283,7 @@ const BillForm = ({ oldBillDetails, edit, changeEditToOff }) => {
   const dispatch = useDispatch();
 
   // router hooks
+  const [searchParams] = useSearchParams();
   const params = useParams();
   const navigate = useNavigate();
 
@@ -290,20 +296,46 @@ const BillForm = ({ oldBillDetails, edit, changeEditToOff }) => {
   const [saveDisabled, setSaveDisabled] = useBoolean(false);
   const [showError, setShowError] = useBoolean(false);
 
-  const getNextBillDetails = async () => {
+  // memoized data
+  const isForkMode = useMemo(() => {
+    return searchParams.has(FORK_BILLID_KEY);
+  }, [searchParams]);
+
+  const billIdToForkFrom = useMemo(() => {
+    return searchParams.get(FORK_BILLID_KEY);
+  }, [searchParams]);
+
+  const getNextBillDetails = async (billId) => {
     setLoading.on();
     try {
       setLoading.on();
       const nextBillDates = await dispatch(
-        billActions.getNextBillDetails(billState.bill.date, params.billId)
+        billActions.getNextBillDetails(billState.bill.date, billId)
       );
       billDispatch({
         type: FORM_ACTIONS.BILL_DC_NUMBER,
         payload: nextBillDates,
       });
     } catch (err) {
-      console.error(err);
       setSaveDisabled.on();
+    } finally {
+      setLoading.off();
+    }
+  };
+
+  const getForkedBillDetails = async (billId) => {
+    setLoading.on();
+    try {
+      const response = await billActions.getForkedBillDetails(billId);
+      const forkedBillDetails = changeDateFormats(response.data.data);
+      delete forkedBillDetails.bill;
+      delete forkedBillDetails.dc;
+      billDispatch({
+        type: FORM_ACTIONS.FORK_BILL,
+        payload: forkedBillDetails,
+      });
+    } catch (err) {
+      errorNoti(getErrorMessage(err));
     } finally {
       setLoading.off();
     }
@@ -335,8 +367,14 @@ const BillForm = ({ oldBillDetails, edit, changeEditToOff }) => {
   };
 
   useEffect(() => {
-    getNextBillDetails();
+    getNextBillDetails(params.billId);
   }, [billState.bill.date]);
+
+  useEffect(() => {
+    if (!edit && isForkMode) {
+      getForkedBillDetails(billIdToForkFrom);
+    }
+  }, [isForkMode, edit]);
 
   if (loading) return <Loading />;
   return (
