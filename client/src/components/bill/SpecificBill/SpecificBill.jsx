@@ -165,7 +165,7 @@ const SpecificBill = () => {
   return (
     <div className='specific-bill'>
       <div className='field-card primary mb-3'>
-        <div className='row g-2'>
+        <div className='row'>
           <h2 className='sub-heading fw-normal m-0 col-12 col-sm-6'>
             Bill No. {singleBill.bill.number}
           </h2>
