@@ -39,6 +39,13 @@ class BillController {
       if (!common.checkKeys(data.body, requiredFields)) {
         return responses.sendBadRequest(res, data.url);
       }
+      common.removeFromObject(data.body, [
+        '_id',
+        '__v',
+        'updatedAt',
+        'createdAt',
+        'id',
+      ]);
       data.body.items = data.body.items.map((item) =>
         common.removeFromObject(item, ['_id'])
       );
@@ -173,6 +180,13 @@ class BillController {
       if (!common.checkKeys(body, requiredFields)) {
         return responses.sendBadRequest(res, data.url);
       }
+      common.removeFromObject(data.body, [
+        '_id',
+        '__v',
+        'updatedAt',
+        'createdAt',
+        'id',
+      ]);
       let bill = await Bills.findById(data.params.billId);
       bill.partyDetails = data.body.partyDetails;
       bill.items = data.body.items.map((item) =>

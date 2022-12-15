@@ -330,6 +330,13 @@ const BillForm = ({ oldBillDetails, edit, changeEditToOff }) => {
       const forkedBillDetails = changeDateFormats(response.data.data);
       delete forkedBillDetails.bill;
       delete forkedBillDetails.dc;
+      removeFromObject(forkedBillDetails, [
+        '_id',
+        '__v',
+        'updatedAt',
+        'createdAt',
+        'id',
+      ]);
       billDispatch({
         type: FORM_ACTIONS.FORK_BILL,
         payload: forkedBillDetails,
