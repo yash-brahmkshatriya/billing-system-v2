@@ -60,12 +60,15 @@ function expectedHeightInPDF(
   parentBoxWidth = 350
 ) {
   // For faster calculation, assuming equal splits by "new line" character
-  const noOfLines = (str.match(/\n/gm) || []).length;
+  const PADDING = 12;
+  const noOfLines = (str.match(/\n/gm) || []).length + 1;
   const charsPerChunk = str.length / noOfLines;
   const noOfLinesPerChunk = Math.ceil(
     (charsPerChunk * charLength) / parentBoxWidth
   );
-  const heightOfChunk = noOfLinesPerChunk * charHeight + noOfLinesPerChunk - 1;
+  const heightOfChunk =
+    noOfLinesPerChunk * (charHeight + PADDING) +
+    (noOfLinesPerChunk - 1) * (charHeight / 10);
   return heightOfChunk * noOfLines;
 }
 
