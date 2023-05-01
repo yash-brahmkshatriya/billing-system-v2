@@ -59,17 +59,32 @@ function expectedHeightInPDF(
   charHeight = 12,
   parentBoxWidth = 350
 ) {
-  // For faster calculation, assuming equal splits by "new line" character
   const PADDING = 12;
-  const noOfLines = (str.match(/\n/gm) || []).length + 1;
-  const charsPerChunk = str.length / noOfLines;
-  const noOfLinesPerChunk = Math.ceil(
-    (charsPerChunk * charLength) / parentBoxWidth
-  );
-  const heightOfChunk =
-    noOfLinesPerChunk * (charHeight + PADDING) +
-    (noOfLinesPerChunk - 1) * (charHeight / 10);
-  return heightOfChunk * noOfLines;
+  const newLineRegex = /\n/gm;
+
+  const chunks = str.split(newLineRegex).filter((x) => x);
+
+  const totalHeightReqd = chunks.reduce((acc, curr) => {
+    const lengthReqdToDisplayChunk = curr.length * charLength;
+    const linesReqdForChunk = Math.ceil(
+      lengthReqdToDisplayChunk / parentBoxWidth
+    );
+    // CharHeight+1  is because there will be space between the lines
+    const heightOfChunk = linesReqdForChunk * (charHeight + 1);
+    return acc + heightOfChunk;
+  }, 0);
+
+  return totalHeightReqd + 2 * PADDING;
+
+  // const noOfLines = (str.match(/\n/gm) || []).length + 1;
+  // const charsPerChunk = str.length / noOfLines;
+  // const noOfLinesPerChunk = Math.ceil(
+  //   (charsPerChunk * charLength) / parentBoxWidth
+  // );
+  // const heightOfChunk =
+  //   noOfLinesPerChunk * (charHeight + PADDING) +
+  //   (noOfLinesPerChunk - 1) * (charHeight / 10);
+  // return heightOfChunk * noOfLines;
 }
 
 function walkThroughDir(dirPath) {
@@ -85,10 +100,24 @@ function walkThroughDir(dirPath) {
   return files;
 }
 
+function getCurrentFinancialYearDates(dateString = null) {
+  let date = dateString ? new Date(dateString) : new Date();
+
+  let financialBeginYear =
+    date.getMonth() < 3 ? date.getFullYear() - 1 : date.getFullYear();
+  let financialYearStartDate = new Date(`04/01/${financialBeginYear} 00:00:00`);
+  let financialYearEndDate = new Date(
+    `03/31/${financialBeginYear + 1} 23:59:59`
+  );
+
+  return { start: financialYearStartDate, end: financialYearEndDate };
+}
+
 module.exports = {
   checkKeys,
   pickFromObject,
   removeFromObject,
   expectedHeightInPDF,
   walkThroughDir,
+  getCurrentFinancialYearDates,
 };

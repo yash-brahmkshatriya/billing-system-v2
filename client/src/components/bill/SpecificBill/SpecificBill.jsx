@@ -109,11 +109,7 @@ const SpecificBill = () => {
       url = `${url}?asString=true`;
       openHtmlAsDataUri(url, `${profile?.firmName}_bill_${params.billId}`);
     } else {
-      downloadFileAsBlob(
-        url,
-        null,
-        `${profile?.firmName}_bill_${params.billId}`
-      );
+      downloadFileAsBlob(url, null);
     }
   }, [params]);
 
@@ -123,7 +119,7 @@ const SpecificBill = () => {
       url = `${url}?asString=true`;
       openHtmlAsDataUri(url, `${profile?.firmName}_dc_${params.billId}`);
     } else {
-      downloadFileAsBlob(url, null, `${profile?.firmName}_dc_${params.billId}`);
+      downloadFileAsBlob(url, null);
     }
   }, [params]);
 
