@@ -28,3 +28,17 @@ export function getCurrentFinancialYearDates(dateString = null) {
 
   return { start: financialYearStartDate, end: financialYearEndDate };
 }
+
+export function getPrevFinancialYearDates(dateString = null) {
+  let finYear = getCurrentFinancialYearDates(dateString);
+  finYear.start.setFullYear(finYear.start.getFullYear() - 1);
+  finYear.end.setFullYear(finYear.end.getFullYear() - 1);
+  return finYear;
+}
+
+export function getNextFinancialYearDates(dateString = null) {
+  let finYear = getCurrentFinancialYearDates(dateString);
+  finYear.start.setFullYear(finYear.start.getFullYear() + 1);
+  finYear.end.setFullYear(finYear.end.getFullYear() + 1);
+  return finYear;
+}
