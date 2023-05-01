@@ -23,14 +23,14 @@ class BillController {
     return {
       charLength: 12,
       charHeight: 12,
-      parentBoxHeight: 350,
+      parentBoxWidth: 350,
     };
   }
   getDCPDFItemCellStyleValues() {
     return {
       charLength: 12,
       charHeight: 12,
-      parentBoxHeight: 480,
+      parentBoxWidth: 480,
     };
   }
   async create(data, res) {
@@ -122,7 +122,7 @@ class BillController {
 
         return responses.sendSuccess(res, records, messages.constant.retrive);
       }
-      const financialDates = this.getCurrentFinancialYearDates();
+      const financialDates = common.getCurrentFinancialYearDates();
       let startDate;
       let endDate;
 
@@ -243,26 +243,11 @@ class BillController {
     }
   }
 
-  getCurrentFinancialYearDates(dateString = null) {
-    let date = dateString ? new Date(dateString) : new Date();
-
-    let financialBeginYear =
-      date.getMonth() < 3 ? date.getFullYear() - 1 : date.getFullYear();
-    let financialYearStartDate = new Date(
-      `04/01/${financialBeginYear} 00:00:00`
-    );
-    let financialYearEndDate = new Date(
-      `03/31/${financialBeginYear + 1} 23:59:59`
-    );
-
-    return { start: financialYearStartDate, end: financialYearEndDate };
-  }
-
   async getNextBillNumbers(user, billDate, billId = null) {
     try {
       // bill Date in form of iso string or mm-dd-yyyy
       if (!billDate) throw new Error('Bill Date is required');
-      const financialDates = this.getCurrentFinancialYearDates(billDate);
+      const financialDates = common.getCurrentFinancialYearDates(billDate);
       let bill;
       if (billId) {
         bill = await Bills.findById(billId);
@@ -344,7 +329,7 @@ class BillController {
             currItem.description,
             billPDFItemCellStyleValues.charLength,
             billPDFItemCellStyleValues.charHeight,
-            billPDFItemCellStyleValues.parentBoxHeight
+            billPDFItemCellStyleValues.parentBoxWidth
           ),
         0
       );
@@ -364,11 +349,19 @@ class BillController {
       } else {
         const billPDFBuffer = await this.createBufferFromHTML(finalHTML);
 
+        const billFinYear = common.getCurrentFinancialYearDates(bill.bill.date);
+        const fileName = `bill_${
+          bill.owner.firmName
+        }_${billFinYear.start.getFullYear()}_${billFinYear.end.getFullYear()}_${
+          bill.bill.number
+        }`;
+
         res.writeHead(200, {
           'Content-Type': 'application/pdf',
-          'Content-disposition':
-            'attachment; filename=bill_' + data.params.billId,
+          'Content-disposition': `attachment`,
+          'Content-Filename': fileName,
           'Content-Length': billPDFBuffer.length,
+          'Access-Control-Expose-Headers': 'Content-Filename',
         });
         return res.end(billPDFBuffer);
       }
@@ -391,19 +384,19 @@ class BillController {
             currItem.description,
             dcPDFItemCellStyleValues.charLength,
             dcPDFItemCellStyleValues.charHeight,
-            dcPDFItemCellStyleValues.parentBoxHeight
+            dcPDFItemCellStyleValues.parentBoxWidth
           ),
         0
       );
 
       // in px
-      const totalHeightReqd = 500;
+      const totalHeightReqd = 600;
 
       bill.emptyRowSpacingHeight = totalHeightReqd - expectedHeightOfItems;
 
       const finalHTML = this.getDCPDFTemplate()(bill);
       // fs.writeFileSync('./out/dc.html', finalHTML);
-      // return res.sendFile(path.join(process.cwd(), 'out', 'bill.html'));
+      // return res.sendFile(path.join(process.cwd(), 'out', 'dc.html'));
 
       const sendHTMLString = data.query.asString ?? false;
       if (sendHTMLString) {
@@ -411,11 +404,19 @@ class BillController {
       } else {
         const dcPDFBuffer = await this.createBufferFromHTML(finalHTML);
 
+        const dcFinYear = common.getCurrentFinancialYearDates(bill.dc.date);
+        const fileName = `dc_${
+          bill.owner.firmName
+        }_${dcFinYear.start.getFullYear()}-${dcFinYear.end.getFullYear()}_${
+          bill.dc.number
+        }`;
+
         res.writeHead(200, {
           'Content-Type': 'application/pdf',
-          'Content-disposition':
-            'attachment; filename=dc_' + data.params.billId,
+          'Content-disposition': `attachment;`,
+          'Content-Filename': fileName,
           'Content-Length': dcPDFBuffer.length,
+          'Access-Control-Expose-Headers': 'Content-Filename',
         });
         return res.end(dcPDFBuffer);
       }
