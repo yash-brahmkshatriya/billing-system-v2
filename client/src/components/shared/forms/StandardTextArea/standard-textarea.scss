@@ -46,6 +46,23 @@
     font-size: 0.75rem;
     color: $base-danger;
   }
+
+  .form-control {
+    &.has-feedback {
+      padding-right: 30px;
+      + .icon {
+        position: absolute;
+        right: 0;
+        padding-right: 8px;
+        margin-top: -35px;
+        color: #919191;
+        cursor: pointer;
+      }
+    }
+    &.after-icon {
+      padding-right: 25px;
+    }
+  }
 }
 .error {
   textarea {
@@ -68,22 +85,5 @@
   color: $base-hint !important;
   &.after {
     left: calc(100% - 40px);
-  }
-}
-
-.form-control {
-  &.has-feedback {
-    padding-right: 30px;
-    + .icon {
-      position: absolute;
-      right: 0;
-      padding-right: 8px;
-      margin-top: -32px;
-      color: #919191;
-      cursor: pointer;
-    }
-  }
-  &.after-icon {
-    padding-right: 25px;
   }
 }

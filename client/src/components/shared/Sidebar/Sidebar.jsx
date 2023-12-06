@@ -15,6 +15,8 @@ import {
   NEW_BILL,
   SINGLE_BILL,
   AUTH,
+  UPDATE_PASSWORD,
+  UPDATE_PROFILE,
 } from '@/data/routeUrls';
 import * as authActions from '@/redux/auth/authActions';
 import './sidebar.scss';
@@ -52,6 +54,12 @@ const Sidebar = ({ sidebarVisible, toggleSidebar }) => {
           </MenuItem>
           <MenuItem active={BILLS_MATCH}>
             <Link to={BILLS}>Bills</Link>
+          </MenuItem>
+          <MenuItem active={matchPath(UPDATE_PASSWORD, location.pathname)}>
+            <Link to={UPDATE_PASSWORD}>Update Password</Link>
+          </MenuItem>
+          <MenuItem active={matchPath(UPDATE_PROFILE, location.pathname)}>
+            <Link to={UPDATE_PROFILE}>Update Profile</Link>
           </MenuItem>
         </Menu>
         <StandardButton
