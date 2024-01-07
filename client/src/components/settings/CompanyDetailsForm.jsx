@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as authActions from '@/redux/auth/authActions';
@@ -14,20 +14,25 @@ import StandardInput from '../shared/forms/StandardInput/StandardInput';
 import StandardButton from '../shared/forms/StandardButton/StandardButton';
 import { errorNoti } from '@/base/Notification/Notification';
 
-const CompanyDetailsForm = ({ onlyCompanyDetails = true }) => {
-  const [userInfo, setUserInfo] = useState({
-    firmName: '',
-    address: {
-      line1: '',
-      line2: '',
-      city: '',
-      state: '',
-      pincode: '',
-    },
-    firstName: '',
-    lastName: '',
-    phone: '',
-  });
+const initialProfile = Object.freeze({
+  firmName: '',
+  address: {
+    line1: '',
+    line2: '',
+    city: '',
+    state: '',
+    pincode: '',
+  },
+  firstName: '',
+  lastName: '',
+  phone: '',
+});
+
+const CompanyDetailsForm = ({
+  showLogo = false,
+  onlyCompanyDetails = false,
+}) => {
+  const [userInfo, setUserInfo] = useState(initialProfile);
 
   const [btnDisabled, setBtnDisabled] = useBoolean(false);
   const [showError, setShowError] = useBoolean(false);
@@ -37,9 +42,7 @@ const CompanyDetailsForm = ({ onlyCompanyDetails = true }) => {
   const dispatch = useDispatch();
   const userProfile = useSelector((state) => state.auth.profile);
 
-  let validations = onlyCompanyDetails
-    ? UserInfoValidationOnlyCompany
-    : UserInfoValidation;
+  const validations = useMemo(() => UserInfoValidation, []);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -52,10 +55,6 @@ const CompanyDetailsForm = ({ onlyCompanyDetails = true }) => {
       phone: userInfo.phone,
       ...userInfo.address,
     };
-    if (!onlyCompanyDetails) {
-      data.firstName = userInfo.firstName;
-      data.lastName = userInfo.lastName;
-    }
     if (!validationFunctions.checkFormValidity(data, validations)) {
       setShowError.on();
       return;
@@ -79,6 +78,7 @@ const CompanyDetailsForm = ({ onlyCompanyDetails = true }) => {
   useEffect(() => {
     if (userProfile) {
       setUserInfo({
+        ...initialProfile,
         ...userProfile,
       });
     }
@@ -88,50 +88,50 @@ const CompanyDetailsForm = ({ onlyCompanyDetails = true }) => {
     <div className='d-flex flex-column h-100 p-md-3'>
       <form onSubmit={submit}>
         <div className='text-center'>
-          {!onlyCompanyDetails ? (
-            <>
-              <img
-                src='/assets/images/logo.png'
-                alt='logo'
-                className='m-auto'
-              />
-              <div className='sub-heading'>Company Details</div>
-            </>
+          {showLogo ? (
+            <img
+              src='/assets/images/logo.png'
+              alt='logo'
+              className='m-auto'
+              width={160}
+            />
           ) : null}
-          <div className='row mb-3'>
-            <div className='col-6'>
-              <StandardInput
-                value={userInfo.firstName}
-                onChange={(e) =>
-                  setUserInfo((prev) => ({
-                    ...prev,
-                    firstName: e.target.value,
-                  }))
-                }
-                className='mt-3'
-                label='First Name'
-                type='text'
-                validations={validations.firstName}
-                showError={showError}
-              />
+          {onlyCompanyDetails ? null : (
+            <div className='row mb-3'>
+              <div className='col-6'>
+                <StandardInput
+                  value={userInfo.firstName}
+                  onChange={(e) =>
+                    setUserInfo((prev) => ({
+                      ...prev,
+                      firstName: e.target.value,
+                    }))
+                  }
+                  className='mt-3'
+                  label='First Name'
+                  type='text'
+                  validations={validations.firstName}
+                  showError={showError}
+                />
+              </div>
+              <div className='col-6'>
+                <StandardInput
+                  value={userInfo.lastName}
+                  onChange={(e) =>
+                    setUserInfo((prev) => ({
+                      ...prev,
+                      lastName: e.target.value,
+                    }))
+                  }
+                  className='mt-3'
+                  label='Last Name'
+                  type='text'
+                  validations={validations.lastName}
+                  showError={showError}
+                />
+              </div>
             </div>
-            <div className='col-6'>
-              <StandardInput
-                value={userInfo.lastName}
-                onChange={(e) =>
-                  setUserInfo((prev) => ({
-                    ...prev,
-                    lastName: e.target.value,
-                  }))
-                }
-                className='mt-3'
-                label='Last Name'
-                type='text'
-                validations={validations.lastName}
-                showError={showError}
-              />
-            </div>
-          </div>
+          )}
           <StandardInput
             value={userInfo.firmName}
             onChange={(e) =>

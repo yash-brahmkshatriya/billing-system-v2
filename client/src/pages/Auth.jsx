@@ -41,7 +41,10 @@ const Auth = () => {
               path={RELATIVE_LOGIN}
               element={<AuthSideInfo img='/assets/images/login.svg' />}
             />
-            <Route path={RELATIVE_SIGNUP} element={<AuthSideInfo />} />
+            <Route
+              path={RELATIVE_SIGNUP}
+              element={<AuthSideInfo img='/assets/images/sign_up.svg' />}
+            />
             <Route path='*' element={<AuthSideInfo />} />
           </Routes>
         </div>

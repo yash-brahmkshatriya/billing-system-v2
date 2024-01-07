@@ -5,7 +5,7 @@ import CompanyDetailsForm from '@/components/settings/CompanyDetailsForm';
 const UpdateProfile = () => {
   return (
     <AppLayout>
-      <CompanyDetailsForm onlyCompanyDetails={true} />
+      <CompanyDetailsForm onlyCompanyDetails={false} />
     </AppLayout>
   );
 };
