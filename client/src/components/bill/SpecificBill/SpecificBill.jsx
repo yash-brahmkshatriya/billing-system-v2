@@ -87,6 +87,11 @@ const SpecificBill = () => {
 
   const progressToast = useRef(null);
 
+  const downloadRequestProgress = useCallback((callback) => {
+    progressToast.current = loadingNoti(`Generating PDF`);
+    return callback;
+  }, []);
+
   const downloadProgressCb = useCallback(
     (pe) => {
       const pct = Math.floor((pe.loaded / pe.total) * 100);
@@ -109,7 +114,7 @@ const SpecificBill = () => {
       url = `${url}?asString=true`;
       openHtmlAsDataUri(url, `${profile?.firmName}_bill_${params.billId}`);
     } else {
-      downloadFileAsBlob(url, null);
+      downloadFileAsBlob(url, downloadRequestProgress(downloadProgressCb));
     }
   }, [params]);
 
@@ -119,7 +124,7 @@ const SpecificBill = () => {
       url = `${url}?asString=true`;
       openHtmlAsDataUri(url, `${profile?.firmName}_dc_${params.billId}`);
     } else {
-      downloadFileAsBlob(url, null);
+      downloadFileAsBlob(url, downloadRequestProgress(downloadProgressCb));
     }
   }, [params]);
 

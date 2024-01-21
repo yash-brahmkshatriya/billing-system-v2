@@ -146,7 +146,7 @@ class StandardInput extends Component {
           </label>
         ) : null}
 
-        {this.props.type === 'password' ? (
+        {this.props.type === 'password' && !this.props.hidePasswordIcon ? (
           <div className='icon' onClick={this.toggleShowPassword}>
             <span className='material-icons'>{this.getPasswordIcon()}</span>
           </div>
@@ -176,6 +176,7 @@ StandardInput.propTypes = {
   checkValidity: PropTypes.func,
   inputProps: PropTypes.object,
   overloadValidity: PropTypes.bool,
+  hidePasswordIcon: PropTypes.bool,
 };
 
 StandardInput.defaultProps = {

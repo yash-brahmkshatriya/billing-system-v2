@@ -79,6 +79,14 @@ export const updateProfile = (userId, data) => (dispatch) => {
     });
 };
 
+export const changePassword = (data) => (dispatch) => {
+  let url = AUTH_URLS.CHANGE_PASSWORD;
+  return instance
+    .put(url, data)
+    .then((response) => successNoti(response.data.message))
+    .catch((err) => errorNoti(getErrorMessage(err)));
+};
+
 export const logout = () => (dispatch) => {
   return dispatch(actions.logout());
 };

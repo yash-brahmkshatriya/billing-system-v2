@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as authActions from '@/redux/auth/authActions';
@@ -14,20 +14,25 @@ import StandardInput from '../shared/forms/StandardInput/StandardInput';
 import StandardButton from '../shared/forms/StandardButton/StandardButton';
 import { errorNoti } from '@/base/Notification/Notification';
 
-const CompanyDetailsForm = ({ onlyCompanyDetails = true }) => {
-  const [userInfo, setUserInfo] = useState({
-    firmName: '',
-    address: {
-      line1: '',
-      line2: '',
-      city: '',
-      state: '',
-      pincode: '',
-    },
-    firstName: '',
-    lastName: '',
-    phone: '',
-  });
+const initialProfile = Object.freeze({
+  firmName: '',
+  address: {
+    line1: '',
+    line2: '',
+    city: '',
+    state: '',
+    pincode: '',
+  },
+  firstName: '',
+  lastName: '',
+  phone: '',
+});
+
+const CompanyDetailsForm = ({
+  showLogo = false,
+  onlyCompanyDetails = false,
+}) => {
+  const [userInfo, setUserInfo] = useState(initialProfile);
 
   const [btnDisabled, setBtnDisabled] = useBoolean(false);
   const [showError, setShowError] = useBoolean(false);
@@ -37,9 +42,8 @@ const CompanyDetailsForm = ({ onlyCompanyDetails = true }) => {
   const dispatch = useDispatch();
   const userProfile = useSelector((state) => state.auth.profile);
 
-  let validations = onlyCompanyDetails
-    ? UserInfoValidationOnlyCompany
-    : UserInfoValidation;
+  const validations = useMemo(() => UserInfoValidation, []);
+
   const submit = async (e) => {
     e.preventDefault();
     if (!userProfile) {
@@ -48,12 +52,9 @@ const CompanyDetailsForm = ({ onlyCompanyDetails = true }) => {
     let data = {
       firmName: userInfo.firmName,
       address: userInfo.address,
+      phone: userInfo.phone,
       ...userInfo.address,
     };
-    if (!onlyCompanyDetails) {
-      data.firstName = userInfo.firstName;
-      data.lastName = userInfo.lastName;
-    }
     if (!validationFunctions.checkFormValidity(data, validations)) {
       setShowError.on();
       return;
@@ -64,6 +65,7 @@ const CompanyDetailsForm = ({ onlyCompanyDetails = true }) => {
         authActions.updateProfile(userProfile._id, data)
       );
       if (done) {
+        await dispatch(authActions.me());
         navigate(DASHBOARD);
       }
     } catch (err) {
@@ -73,14 +75,29 @@ const CompanyDetailsForm = ({ onlyCompanyDetails = true }) => {
     }
   };
 
+  useEffect(() => {
+    if (userProfile) {
+      setUserInfo({
+        ...initialProfile,
+        ...userProfile,
+      });
+    }
+  }, [userProfile]);
+
   return (
     <div className='d-flex flex-column h-100 p-md-3'>
       <form onSubmit={submit}>
         <div className='text-center'>
-          <img src='/assets/images/logo.png' alt='logo' className='m-auto' />
-          <div className='sub-heading'>Company Details</div>
-          {!onlyCompanyDetails ? (
-            <div className='row'>
+          {showLogo ? (
+            <img
+              src='/assets/images/logo.png'
+              alt='logo'
+              className='m-auto'
+              width={160}
+            />
+          ) : null}
+          {onlyCompanyDetails ? null : (
+            <div className='row mb-3'>
               <div className='col-6'>
                 <StandardInput
                   value={userInfo.firstName}
@@ -114,7 +131,7 @@ const CompanyDetailsForm = ({ onlyCompanyDetails = true }) => {
                 />
               </div>
             </div>
-          ) : null}
+          )}
           <StandardInput
             value={userInfo.firmName}
             onChange={(e) =>
