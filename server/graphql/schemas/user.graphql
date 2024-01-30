@@ -1,0 +1,37 @@
+type Address {
+  line1: String
+  line2: String
+  city: String
+  state: String
+  pincode: String
+}
+
+type User {
+  _id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String
+  firmName: String
+  adress: Address
+  phone: String
+  termsAndConditions: [String!]
+}
+
+type AuthToken {
+  authToken: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input CheckEmailInput {
+  email: String!
+}
+
+type Query {
+  login(loginInput: LoginInput!): AuthToken
+  checkEmail(checkEmailInput: CheckEmailInput!): Boolean
+}
