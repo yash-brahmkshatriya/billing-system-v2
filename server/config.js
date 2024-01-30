@@ -4,6 +4,7 @@ module.exports = {
   },
   saltRounds: 10,
   jwtSecret: process.env.JWT_SECRET,
+  jwtExpiry: '6h',
   pagination: {
     size: 20,
   },

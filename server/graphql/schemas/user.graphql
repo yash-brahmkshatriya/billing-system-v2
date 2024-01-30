@@ -31,7 +31,51 @@ input CheckEmailInput {
   email: String!
 }
 
+input GetUserInput {
+  _id: ID!
+}
+
+input AddressInput {
+  line1: String!
+  line2: String!
+  city: String!
+  state: String!
+  pincode: String!
+}
+
+input UpdateUserInput {
+  firstName: String
+  lastName: String
+  firmName: String
+  address: AddressInput
+  phone: String
+  termsAndConditions: [String!]
+}
+
+input PasswordChangeInput {
+  old: String!
+  new: String!
+}
+
+input CreateUserInput {
+  firstName: String!
+  email: String!
+  password: String!
+  lastName: String
+  firmName: String
+  adress: AddressInput
+  phone: String
+  termsAndConditions: [String!]
+}
+
 type Query {
   login(loginInput: LoginInput!): AuthToken
+  profile(_id: ID!): User
   checkEmail(checkEmailInput: CheckEmailInput!): Boolean
+}
+
+type Mutation {
+  createUser(userInput: CreateUserInput!): Boolean
+  editUser(userInput: UpdateUserInput!): User
+  changePassword(changePasswordInput: PasswordChangeInput): Boolean
 }

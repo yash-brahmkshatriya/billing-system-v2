@@ -2,6 +2,8 @@ const User = require('../../modules/user/model');
 const encryption = require('../../utils/encryption');
 const messages = require('../../utils/messages');
 const { throwGraphQLError } = require('../../utils/responses');
+const { isAuthenticated } = require('../middlewares/authenticate');
+const { applyMiddlewares } = require('../middlewares/middlewareChain');
 
 const userQueryResovlers = {
   Query: {
@@ -18,7 +20,6 @@ const userQueryResovlers = {
       }
       const criteriaForJWT = {
         _id: user._id,
-        date: new Date(),
       };
 
       const authToken = await encryption.generateAuthToken(criteriaForJWT);
@@ -31,6 +32,16 @@ const userQueryResovlers = {
         return true;
       } else return false;
     },
+    profile: async (...resolverArgs) =>
+      await applyMiddlewares.apply(null, resolverArgs)(
+        isAuthenticated,
+        async (_, { _id }) => {
+          let user = await User.findById(_id).select({ password: 0 }).lean();
+
+          if (user) return user;
+          throwGraphQLError(messages.user.user_not_found);
+        }
+      ),
   },
   Mutation: {},
 };

@@ -1,6 +1,6 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const config = require("../config");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('../config');
 
 /**
  * @function <b>hashPasswordUsingBcrypt</b><br>
@@ -33,24 +33,24 @@ const comparePasswordUsingBcrypt = (plainTextPassword, passwordhash) =>
  * @return {String} Auth Token
  */
 
-const generateAuthToken = async (criteriaForJwt) => {
-  const token = await jwt.sign(criteriaForJwt, config.jwtSecret);
-  if (token) {
-    try {
-      return token;
-    } catch (error) {
-      throw error;
-    }
-  }
+const generateAuthToken = (criteriaForJwt) => {
+  const token = jwt.sign(criteriaForJwt, config.jwtSecret, {
+    expiresIn: config.jwtExpiry,
+  });
+  return token;
 };
 
 /**
  * @function <b>findByToken</b><br> decrypt Token
  * @param {String} token token to be decrypt
- * @return {Object} if match returns user object
+ * @return {Object} payload if match returns user object else return null
  */
-const findByToken = (token) => jwt.verify(token, config.jwtSecret);
-
+const findByToken = (token) => {
+  try {
+    return jwt.verify(token, config.jwtSecret);
+  } catch (_) {}
+  return null;
+};
 module.exports = {
   hashPasswordUsingBcrypt,
   comparePasswordUsingBcrypt,

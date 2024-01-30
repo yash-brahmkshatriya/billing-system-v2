@@ -10,6 +10,7 @@ const {
   prepareGraphQlSchemas,
   prepareGraphQLResolvers,
 } = require('./graphql/graphql-utils');
+const prepareContext = require('./graphql/middlewares/prepareContext');
 
 const app = express();
 
@@ -20,7 +21,11 @@ const startApp = async () => {
   const apolloServer = new ApolloServer({
     typeDefs: prepareGraphQlSchemas(),
     resolvers: prepareGraphQLResolvers(),
+    context: async ({ req, res }) => {
+      return await prepareContext(req, res);
+    },
   });
+
   await apolloServer.start();
   app.use(express.json());
   app.use(cookieParser());
