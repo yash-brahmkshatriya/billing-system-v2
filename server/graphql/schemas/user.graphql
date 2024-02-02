@@ -68,14 +68,21 @@ input CreateUserInput {
   termsAndConditions: [String!]
 }
 
+# Response Types
+type CreateUserResponse {
+  token: String!
+  user: User!
+}
+
 type Query {
   login(loginInput: LoginInput!): AuthToken
   profile(_id: ID!): User
+  me: User
   checkEmail(checkEmailInput: CheckEmailInput!): Boolean
 }
 
 type Mutation {
-  createUser(userInput: CreateUserInput!): Boolean
-  editUser(userInput: UpdateUserInput!): User
+  createUser(createUserInput: CreateUserInput!): CreateUserResponse
+  editUser(_id: ID!, editUserInput: UpdateUserInput!): User
   changePassword(changePasswordInput: PasswordChangeInput): Boolean
 }

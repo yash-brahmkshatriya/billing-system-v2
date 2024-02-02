@@ -1,49 +1,36 @@
-const User = require('../../modules/user/model');
-const encryption = require('../../utils/encryption');
-const messages = require('../../utils/messages');
-const { throwGraphQLError } = require('../../utils/responses');
-const { isAuthenticated } = require('../middlewares/authenticate');
+const { isAuthenticated, isSelf } = require('../middlewares/authenticate');
 const { applyMiddlewares } = require('../middlewares/middlewareChain');
+const userRepository = require('../../modules/user/repository');
 
 const userQueryResovlers = {
   Query: {
-    login: async (_, { loginInput }) => {
-      const { email, password } = loginInput;
-      let user = await User.findOne({ email });
-      if (!user) throwGraphQLError(messages.user.user_not_found);
-      let validPassword = await encryption.comparePasswordUsingBcrypt(
-        password,
-        user.password
-      );
-      if (!validPassword) {
-        throwGraphQLError(messages.auth.invalid_credentials);
-      }
-      const criteriaForJWT = {
-        _id: user._id,
-      };
-
-      const authToken = await encryption.generateAuthToken(criteriaForJWT);
-      return { authToken };
-    },
-    checkEmail: async (_, { checkEmailInput }) => {
-      const { email } = checkEmailInput;
-      let user = await User.findOne({ email }).lean();
-      if (user) {
-        return true;
-      } else return false;
-    },
+    login: userRepository.loginResolver,
+    checkEmail: userRepository.checkEmailResolver,
     profile: async (...resolverArgs) =>
       await applyMiddlewares.apply(null, resolverArgs)(
         isAuthenticated,
-        async (_, { _id }) => {
-          let user = await User.findById(_id).select({ password: 0 }).lean();
-
-          if (user) return user;
-          throwGraphQLError(messages.user.user_not_found);
-        }
+        userRepository.getProfileResolver
+      ),
+    me: async (...resolverArgs) =>
+      await applyMiddlewares.apply(null, resolverArgs)(
+        isAuthenticated,
+        userRepository.me
       ),
   },
-  Mutation: {},
+  Mutation: {
+    createUser: userRepository.createUserMutationResolver,
+    editUser: async (...resolverArgs) =>
+      await applyMiddlewares.apply(null, resolverArgs)(
+        isAuthenticated,
+        isSelf,
+        userRepository.editUserMutationResolver
+      ),
+    changePassword: async (...resolverArgs) =>
+      await applyMiddlewares.apply(null, resolverArgs)(
+        isAuthenticated,
+        userRepository.changePassword
+      ),
+  },
 };
 
 module.exports = { userQueryResovlers };

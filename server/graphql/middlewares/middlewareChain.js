@@ -7,7 +7,6 @@
 const applyMiddlewares =
   (...resolverArgs) =>
   async (...middlewares) => {
-    const contextValue = resolverArgs[2];
     const next = () => Promise.resolve();
 
     for (let index in middlewares) {
@@ -18,8 +17,17 @@ const applyMiddlewares =
         return await middleware.apply(null, resolverArgs);
       }
 
-      await middleware(contextValue, next);
+      await middleware(resolverArgs, next);
     }
   };
 
-module.exports = { applyMiddlewares };
+const getParentQuery = (resolverArgs) => resolverArgs[0];
+const getQueryArgs = (resolverArgs) => resolverArgs[1];
+const getContextValue = (resolverArgs) => resolverArgs[2];
+
+module.exports = {
+  applyMiddlewares,
+  getParentQuery,
+  getQueryArgs,
+  getContextValue,
+};
