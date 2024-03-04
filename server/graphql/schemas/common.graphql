@@ -1,0 +1,53 @@
+scalar Date
+
+interface Node {
+  _id: ID!
+}
+
+enum SortOrder {
+  ASC
+  DESC
+}
+
+interface PaginatedList {
+  items: [Node]!
+  totalItems: Int!
+}
+
+type IDOperators {
+  eq: String
+  notEq: String
+  in: [String!]
+  notIn: [String!]
+  isNull: Boolean
+}
+
+type DateRange {
+  start: Date!
+  end: Date!
+}
+
+type DateOperators {
+  eq: Date
+  notEq: Date
+  before: Date
+  after: Date
+  between: DateRange
+  isNull: Boolean
+}
+
+type StringOperators {
+  eq: String
+  notEq: String
+  contains: String
+  notContains: String
+  in: [String!]
+  notIn: [String!]
+  regex: String
+  isNull: Boolean
+}
+
+enum LogicalOperator {
+  AND
+  OR
+}

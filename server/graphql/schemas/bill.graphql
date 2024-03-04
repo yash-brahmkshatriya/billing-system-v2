@@ -1,0 +1,116 @@
+# import * from "./common.graphql"
+# import * from "./user.graphql"
+
+type POReceipt {
+  number: String
+  date: Date
+}
+input POReceiptInput {
+  number: String
+  date: Date
+}
+
+type Receipt {
+  number: Int!
+  date: Date!
+}
+
+input ReceiptInput {
+  number: Int!
+  date: Date!
+}
+
+type Item {
+  description: String!
+  rate: Float!
+  quantity: Float!
+  unit: String!
+  qtyPerUnit: Int!
+  amount: Float!
+}
+
+input ItemInput {
+  description: String!
+  rate: Float!
+  quantity: Float!
+  unit: String!
+  qtyPerUnit: Int!
+}
+
+type Bill implements Node {
+  _id: ID!
+  createdAt: Date
+  updatedAt: Date
+
+  bill: Receipt!
+  dc: Receipt!
+  po: POReceipt!
+  items: [Item!]!
+  partyDetails: String!
+  discountPercentage: Float
+  isCancelled: Boolean
+  isCancelledReason: String
+  owner: User!
+  totalAmount: Float
+  roundOff: Float
+  grandTotal: Float
+}
+
+input CreateBillInput {
+  partyDetails: String!
+  items: [ItemInput!]!
+  bill: ReceiptInput
+  dc: ReceiptInput
+  po: POReceiptInput
+}
+
+input NextBillNumbersInput {
+  queryDate: Date!
+  billId: ID!
+}
+
+type NextBillResponse {
+  billNumber: Int
+  dcNumber: Int
+}
+
+type BillSortParameter {
+  _id: SortOrder
+  createdAt: SortOrder
+  partyDetails: SortOrder
+  grandTotal: SortOrder
+  billNumber: SortOrder
+}
+
+type BillFilterParameter {
+  _id: IDOperators
+  createdAt: DateOperators
+  partyDetails: StringOperators
+}
+
+type BillListOptions {
+  skip: Int
+  take: Int
+  sort: BillSortParameter
+  filter: BillFilterParamer
+  filterOperator: LogicalOperator
+}
+
+type GetBillsMetaResult {
+  currentPage: Int
+  recordPerPage: Int
+  totalRecords: Int
+}
+type GetBillsResult {
+  records: [Bill]!
+  meta: GetBillsMetaResult
+}
+
+type Query {
+  nextBillNumbers(nextBillNumbersInput: NextBillNumbersInput): NextBillResponse
+  bills(options: BillListOptions): GetBillsResult
+}
+
+type Mutation {
+  createBill(createBillInput: CreateBillInput!): Bill
+}

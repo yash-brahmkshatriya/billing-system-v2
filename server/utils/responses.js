@@ -6,6 +6,17 @@ const throwGraphQLError = (errorMessage, statusCode) => {
   });
 };
 
+const throwGeneralisedError = () =>
+  throwGraphQLError('Something went wrong! ', 500);
+
+const checkAndThrowError = (e) => {
+  if (e instanceof GraphQLError) throw e;
+  else {
+    console.error(e);
+    throwGeneralisedError();
+  }
+};
+
 const sendSuccess = (res, data, message = 'Success', meta = {}) => {
   return res.status(200).json({
     message,
@@ -42,4 +53,6 @@ module.exports = {
   sendSuccess,
   sendUnauthorized,
   throwGraphQLError,
+  throwGeneralisedError,
+  checkAndThrowError,
 };
